@@ -1,5 +1,6 @@
 package com.querodoar.querodoar_api.usuario.dtos;
 
+import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
 import com.querodoar.querodoar_api.usuario.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -11,9 +12,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class UserCreateDto {
-    @NotEmpty(message = "Informe ao menos um endereço")
-    @Schema(description = "Lista de IDs dos endereços", example = "[1, 2, 3]")
-    private List<Integer> address_ids;
+    @NotNull(message = "O ID do endereço é obrigatório")
+    @Schema(description = "ID do endereço já cadastrado", example = "1")
+    private Long addressId;
+
+    @NotNull(message = "O endereço é obrigatório")
+    @Schema(description = "Endereço do usuário")
+    private AddressCreateDto address;
 
     @NotBlank(message="O nome é obrigatório")
     @Size(min=3, max=100, message="O nome deve ter entre 3 e 100 caracteres")
@@ -79,12 +84,20 @@ public class UserCreateDto {
     @Schema(description = "Indica se o usuário está verificado")
     private boolean verified;
 
-    public List<Integer> getAddress_ids() {
-        return address_ids;
+    public Long getAddressId() {
+        return addressId;
     }
 
-    public void setAddress_ids(List<Integer> address_ids) {
-        this.address_ids = address_ids;
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
+    }
+
+    public AddressCreateDto getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressCreateDto address) {
+        this.address = address;
     }
 
     public String getName() {

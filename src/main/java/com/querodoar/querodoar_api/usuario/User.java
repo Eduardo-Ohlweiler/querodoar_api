@@ -16,8 +16,12 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(
+            name = "address_id",
+            foreignKey = @ForeignKey(name = "user_address_fk")
+    )
+    private Address address;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -39,7 +43,7 @@ public class User {
     private Role role = Role.USER;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Column(name = "verified")
     private Boolean verified;
@@ -57,13 +61,6 @@ public class User {
         return id;
     }
 
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
 
     public String getEmail() {
         return email;
@@ -151,5 +148,13 @@ public class User {
 
     public void setWhatsapp(String whatsapp) {
         this.whatsapp = whatsapp;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

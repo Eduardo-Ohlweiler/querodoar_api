@@ -1,5 +1,7 @@
 package com.querodoar.querodoar_api.usuario;
 
+import com.querodoar.querodoar_api.address.Address;
+import com.querodoar.querodoar_api.city.CityRepository;
 import com.querodoar.querodoar_api.exceptions.ConflictException;
 import com.querodoar.querodoar_api.exceptions.NotFoundException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
@@ -14,6 +16,7 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository repository;
+    private CityRepository cityRepository;
     private PasswordEncoder passwordEncoder;
 
     public List<User> getAll(){
@@ -59,6 +62,22 @@ public class UserService {
                 }
             }
         }
+
+        if(dto.getAddress() != null){
+            Address endereco = new Address();
+            endereco.setCity(cityRepository.findById(dto.getAddress().getCityId())
+                    .orElseThrow(() -> new NotFoundException("Cidade não encontrada")));
+            endereco.setPostalCode(dto.getAddress().getPostalCode());
+            endereco.setStreet(dto.getAddress().getStreet());
+            endereco.setNumber(dto.getAddress().getNumber());
+            endereco.setNeighborhood(dto.getAddress().getNeighborhood());
+            endereco.setComplement(dto.getAddress().getComplement());
+            endereco.setReference(dto.getAddress().getReference());
+
+            // Associa o endereço ao usuário
+            usuario.setAddress(endereco);
+        }
+
         this.repository.save(usuario);
         usuario.setPasswordHash(null);
         return usuario;
