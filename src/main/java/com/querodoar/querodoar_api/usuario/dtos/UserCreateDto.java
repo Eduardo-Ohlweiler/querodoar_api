@@ -7,11 +7,13 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public class UserCreateDto {
-    @NotNull(message = "O id do endereço é obrigatorio")
-    @Min(value = 0, message = "O id do endereço deve ser maior que zero")
-    @Schema(description = "Deve ser passado o id do endereço", example = "2")
-    private Integer address_id;
+    @NotEmpty(message = "Informe ao menos um endereço")
+    @Schema(description = "Lista de IDs dos endereços", example = "[1, 2, 3]")
+    private List<Integer> address_ids;
 
     @NotBlank(message="O nome é obrigatório")
     @Size(min=3, max=100, message="O nome deve ter entre 3 e 100 caracteres")
@@ -31,7 +33,7 @@ public class UserCreateDto {
     @NotBlank(message = "Informe a data de nascimento")
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "A data deve estar no formato yyyy-MM-dd")
     @Schema(description = "Data de nascimento do usuário", example = "1990-01-01")
-    private String birthday;
+    private LocalDate birthday;
 
     @NotBlank(message="A senha é obrigatória")
     @Size(min = 6, max = 20, message = "A senha deve ter entre 6 e 20 caracteres")
@@ -77,12 +79,12 @@ public class UserCreateDto {
     @Schema(description = "Indica se o usuário está verificado")
     private boolean verified;
 
-    public Integer getAddress_id() {
-        return address_id;
+    public List<Integer> getAddress_ids() {
+        return address_ids;
     }
 
-    public void setAddress_id(Integer address_id) {
-        this.address_id = address_id;
+    public void setAddress_ids(List<Integer> address_ids) {
+        this.address_ids = address_ids;
     }
 
     public String getName() {
@@ -109,11 +111,11 @@ public class UserCreateDto {
         this.cpf = cpf;
     }
 
-    public String getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

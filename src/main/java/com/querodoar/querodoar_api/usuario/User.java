@@ -4,6 +4,8 @@ import com.querodoar.querodoar_api.address.Address;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -14,10 +16,8 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @ManyToOne(targetEntity = Address.class)
-    @JoinColumn(name = "address_id",
-            foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "address_fk"))
-    private Address address;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>();
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -57,12 +57,12 @@ public class User {
         return id;
     }
 
-    public Address getAddress() {
-        return address;
+    public List<Address> getAddresses() {
+        return addresses;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public String getEmail() {
