@@ -46,6 +46,9 @@ public class UserService {
         usuario.setEmail(dto.getEmail());
         usuario.setCpf(dto.getCpf());
         usuario.setBirthday(dto.getBirthday());
+        usuario.setCellPhone(dto.getCell_phone());
+        usuario.setHomePhone(dto.getHome_phone());
+        usuario.setWhatsapp(dto.getWhatsapp());
         usuario.setPasswordHash(passwordEncoder.encode(dto.getPassword_hash()));
 
         if(usuarioId != null){
