@@ -3,7 +3,7 @@ package com.querodoar.querodoar_api.utils;
 import java.security.Key;
 import java.util.Date;
 
-import com.querodoar.querodoar_api.enums.UsuarioRole;
+import com.querodoar.querodoar_api.usuario.Role;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -18,7 +18,7 @@ public class JwtUtil {
 
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
-    public String gerar(Integer id, UsuarioRole role){
+    public String gerar(Integer id, Role role){
         return Jwts.builder()
                 .setSubject(id.toString())
                 .claim("role", role)
@@ -33,8 +33,8 @@ public class JwtUtil {
         return Integer.parseInt(claims.getSubject());
     }
 
-    public UsuarioRole getRole(String token){
+    public Role getRole(String token){
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        return UsuarioRole.valueOf(claims.get("role", String.class));
+        return Role.valueOf(claims.get("role", String.class));
     }
 }

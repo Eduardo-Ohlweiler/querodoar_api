@@ -3,7 +3,7 @@ package com.querodoar.querodoar_api.utils;
 import java.io.IOException;
 import java.util.List;
 
-import com.querodoar.querodoar_api.enums.UsuarioRole;
+import com.querodoar.querodoar_api.usuario.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,7 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = header.substring(7);
             try{
                 Integer id = jwtUtil.getId(token);
-                UsuarioRole role  = jwtUtil.getRole(token);
+                Role role  = jwtUtil.getRole(token);
 
                 List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_"+role));
 
