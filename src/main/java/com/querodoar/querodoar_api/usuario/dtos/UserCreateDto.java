@@ -13,12 +13,12 @@ import java.util.List;
 
 public class UserCreateDto {
     @NotNull(message = "O ID do endereço é obrigatório")
-    @Schema(description = "ID do endereço já cadastrado", example = "1")
-    private Long addressId;
+    @Schema(description = "Informe o ID do endereço já cadastrado", example = "1")
+    private Integer addressId;
 
-    @NotNull(message = "O endereço é obrigatório")
-    @Schema(description = "Endereço do usuário")
-    private AddressCreateDto address;
+    //@NotNull(message = "O endereço é obrigatório")
+   // @Schema(description = "Endereço do usuário")
+    //private AddressCreateDto address;
 
     @NotBlank(message="O nome é obrigatório")
     @Size(min=3, max=100, message="O nome deve ter entre 3 e 100 caracteres")
@@ -84,6 +84,7 @@ public class UserCreateDto {
     @Schema(description = "Indica se o usuário está verificado")
     private boolean verified;
 
+/*
     public Long getAddressId() {
         return addressId;
     }
@@ -98,6 +99,14 @@ public class UserCreateDto {
 
     public void setAddress(AddressCreateDto address) {
         this.address = address;
+    }*/
+
+    public Integer getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Integer addressId) {
+        this.addressId = addressId;
     }
 
     public String getName() {
