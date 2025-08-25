@@ -16,7 +16,11 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository repository;
+
+    @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public List<User> getAll(){

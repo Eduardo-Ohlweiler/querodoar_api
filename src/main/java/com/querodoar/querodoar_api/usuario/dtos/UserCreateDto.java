@@ -1,5 +1,6 @@
 package com.querodoar.querodoar_api.usuario.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
 import com.querodoar.querodoar_api.usuario.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,8 +36,8 @@ public class UserCreateDto {
     @Schema(description = "CPF do usuário", example = "24427062024")
     private String cpf;
 
-    @NotBlank(message = "Informe a data de nascimento")
-    @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "A data deve estar no formato yyyy-MM-dd")
+    @NotNull(message = "Informe a data de nascimento")
+    @Past(message = "A data de nascimento deve estar no passado")
     @Schema(description = "Data de nascimento do usuário", example = "1990-01-01")
     private LocalDate birthday;
 
@@ -46,9 +47,7 @@ public class UserCreateDto {
             regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).+$",
             message = "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula e um número"
     )
-    @Schema(
-            description = "Senha que será usada no login, deve conter pelo menos uma letra maiúscula, uma letra minúscula e um número",
-            example = "Senha_complexa123")
+    @JsonProperty("password_hash")
     private String password_hash;
 
     @Enumerated(EnumType.STRING)
@@ -60,7 +59,7 @@ public class UserCreateDto {
             regexp = "\\(\\d{2}\\)9\\d{4}-\\d{4}",
             message = "O número de celular deve estar no formato (XX)9XXXX-XXXX"
     )
-    @Schema(description = "Número de celular", example = "(51)98765-4321")
+    @JsonProperty("cellPhone")
     private String cell_phone;
 
     @NotBlank(message = "O telefone fixo é obrigatório")
@@ -68,14 +67,14 @@ public class UserCreateDto {
             regexp = "\\(\\d{2}\\)\\d{4}-\\d{4}",
             message = "O telefone fixo deve estar no formato (XX)XXXX-XXXX"
     )
-    @Schema(description = "Telefone fixo", example = "(51)3344-5566")
+    @JsonProperty("homePhone")
     private String home_phone;
 
     @Pattern(
             regexp = "\\(\\d{2}\\)9\\d{4}-\\d{4}",
             message = "O WhatsApp deve estar no formato (XX)9XXXX-XXXX"
     )
-    @Schema(description = "Número do WhatsApp (opcional)", example = "(51)98765-4321")
+    @JsonProperty("whatsapp")
     private String whatsapp;
 
     @Schema(description = "Indica se o usuário está ativo")
