@@ -1,5 +1,7 @@
 package com.querodoar.querodoar_api.auth;
 
+import com.querodoar.querodoar_api.address.Address;
+import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
 import com.querodoar.querodoar_api.usuario.User;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
 import jakarta.validation.Valid;
@@ -23,5 +25,11 @@ public class AuthController {
 
         User usuario = this.service.create(dto);
         return new ResponseEntity<>(usuario, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/createaddress")
+    public ResponseEntity<Address> createAddress(@Valid @RequestBody AddressCreateDto dto){
+        Address address = this.service.createAddress(dto);
+        return new ResponseEntity<>(address, HttpStatus.CREATED);
     }
 }
