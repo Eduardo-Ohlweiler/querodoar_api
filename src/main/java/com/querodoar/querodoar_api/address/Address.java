@@ -11,14 +11,6 @@ public class Address {
     @Column(name = "address_id")
     private Integer id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "user_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "user_fk")
-    )
-    private User user;
-
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "city_id",

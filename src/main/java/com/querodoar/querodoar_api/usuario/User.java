@@ -14,7 +14,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long id;
+    private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(
@@ -57,10 +57,9 @@ public class User {
     @Column(name = "whatsapp")
     private String whatsapp;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
-
 
     public String getEmail() {
         return email;
