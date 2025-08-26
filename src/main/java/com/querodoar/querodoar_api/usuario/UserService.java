@@ -47,6 +47,8 @@ public class UserService {
         boolean usuario_existe = this.repository.existsByEmail(dto.getEmail());
         if(usuario_existe)
             throw new ConflictException("Já existe usuario com esse email cadastrado, verifique");
+        if(repository.existsByCpf(dto.getCpf()))
+            throw new ConflictException("CPF já cadastrado");
 
         User usuario = new User();
         usuario.setName(dto.getName());
@@ -73,20 +75,6 @@ public class UserService {
                 }
             }
         }
-/*
-        if(dto.getAddress() != null){
-            Address endereco = new Address();
-            endereco.setCity(cityRepository.findById(dto.getAddress().getCityId())
-                    .orElseThrow(() -> new NotFoundException("Cidade não encontrada")));
-            endereco.setPostalCode(dto.getAddress().getPostalCode());
-            endereco.setStreet(dto.getAddress().getStreet());
-            endereco.setNumber(dto.getAddress().getNumber());
-            endereco.setNeighborhood(dto.getAddress().getNeighborhood());
-            endereco.setComplement(dto.getAddress().getComplement());
-            endereco.setReference(dto.getAddress().getReference());
-
-            usuario.setAddress(endereco);
-        }*/
 
         this.repository.save(usuario);
         usuario.setPasswordHash(null);

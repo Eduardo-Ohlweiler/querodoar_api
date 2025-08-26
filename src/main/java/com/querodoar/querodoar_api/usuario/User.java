@@ -46,7 +46,7 @@ public class User {
     private Boolean isActive = true;
 
     @Column(name = "verified")
-    private Boolean verified;
+    private Boolean verified = true;
 
     @Column(name = "cell_phone")
     private String cellPhone;

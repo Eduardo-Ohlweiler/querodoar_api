@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class UserCreateDto {
-    @NotNull(message = "O ID do endereço é obrigatório")
     @Schema(description = "Informe o ID do endereço já cadastrado", example = "1")
     private Integer addressId;
 
@@ -56,23 +55,23 @@ public class UserCreateDto {
 
     @NotBlank(message = "O número de celular é obrigatório")
     @Pattern(
-            regexp = "\\(\\d{2}\\)9\\d{4}-\\d{4}",
-            message = "O número de celular deve estar no formato (XX)9XXXX-XXXX"
+            regexp = "\\d{11}",
+            message = "O número de celular deve ter 11 dígitos (DD + número)"
     )
     @JsonProperty("cellPhone")
     private String cell_phone;
 
     @NotBlank(message = "O telefone fixo é obrigatório")
     @Pattern(
-            regexp = "\\(\\d{2}\\)\\d{4}-\\d{4}",
-            message = "O telefone fixo deve estar no formato (XX)XXXX-XXXX"
+            regexp = "\\d{10}",
+            message = "O telefone fixo deve ter 10 dígitos (DD + número)"
     )
     @JsonProperty("homePhone")
     private String home_phone;
 
     @Pattern(
-            regexp = "\\(\\d{2}\\)9\\d{4}-\\d{4}",
-            message = "O WhatsApp deve estar no formato (XX)9XXXX-XXXX"
+            regexp = "\\d{11}",
+            message = "O WhatsApp deve ter 11 dígitos (DD + número)"
     )
     @JsonProperty("whatsapp")
     private String whatsapp;

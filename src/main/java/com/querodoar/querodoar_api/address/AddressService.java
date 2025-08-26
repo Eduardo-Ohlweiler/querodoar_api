@@ -54,10 +54,13 @@ public class AddressService {
 
                 address.setCity(city);
             }
-            if(dto.getComplement() != null || !dto.getComplement().isEmpty())
+            if (dto.getComplement() != null && !dto.getComplement().isEmpty()) {
                 address.setComplement(dto.getComplement());
-            if(dto.getReference() != null || !dto.getReference().isEmpty())
+            }
+
+            if (dto.getReference() != null && !dto.getReference().isEmpty()) {
                 address.setReference(dto.getReference());
+            }
             address.setNeighborhood(dto.getNeighborhood());
             address.setNumber(dto.getNumber());
             address.setPostalCode(dto.getPostalCode());
