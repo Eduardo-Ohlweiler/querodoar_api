@@ -3,6 +3,8 @@ package com.querodoar.querodoar_api.auth;
 import com.querodoar.querodoar_api.address.Address;
 import com.querodoar.querodoar_api.address.AddressService;
 import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
+import com.querodoar.querodoar_api.auth.dtos.LoginDto;
+import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.User;
 import com.querodoar.querodoar_api.usuario.UserService;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
@@ -27,5 +29,15 @@ public class AuthService {
 
     public Address createAddress(AddressCreateDto dto){
         return this.addressService.create(dto);
+    }
+
+    public String login(LoginDto dto){
+        User usuario  = this.userService.findByEmail(dto.getEmail());
+        Boolean match = this.userService.compararSenha(dto.getPassword_hash(), usuario);
+
+        if(!match)
+            throw new UnauthorizedException("Credenciais inválidas");
+
+        return jwtUtil.gerar(usuario.getId(), usuario.getRole());
     }
 }

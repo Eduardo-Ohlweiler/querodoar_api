@@ -2,6 +2,7 @@ package com.querodoar.querodoar_api.auth;
 
 import com.querodoar.querodoar_api.address.Address;
 import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
+import com.querodoar.querodoar_api.auth.dtos.LoginDto;
 import com.querodoar.querodoar_api.exceptions.dto.ExceptionResponseDto;
 import com.querodoar.querodoar_api.usuario.User;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +62,16 @@ public class AuthController {
     public ResponseEntity<Address> createAddress(@Valid @RequestBody AddressCreateDto dto){
         Address address = this.service.createAddress(dto);
         return new ResponseEntity<>(address, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Faz login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
+    })
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody LoginDto dto){
+        String temp = this.service.login(dto);
+        return new ResponseEntity<>(temp, HttpStatus.OK);
     }
 }

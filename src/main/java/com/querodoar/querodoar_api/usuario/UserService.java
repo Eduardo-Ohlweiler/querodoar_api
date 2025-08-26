@@ -80,4 +80,8 @@ public class UserService {
         usuario.setPasswordHash(null);
         return usuario;
     }
+
+    public Boolean compararSenha(String senha, User usuario){
+        return this.passwordEncoder.matches(senha, usuario.getPasswordHash());
+    }
 }
