@@ -7,8 +7,11 @@ import com.querodoar.querodoar_api.city.City;
 import com.querodoar.querodoar_api.city.CityRepository;
 import com.querodoar.querodoar_api.exceptions.ConflictException;
 import com.querodoar.querodoar_api.exceptions.NotFoundException;
+import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +32,8 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public List<User> getAll(){
-        return this.repository.findAll();
+    public Page<User> getAll(Pageable pageable){
+        return this.repository.findAll(pageable);
     }
 
     public User findByEmail(String email) throws NotFoundException {
@@ -99,6 +102,14 @@ public class UserService {
         this.repository.save(usuario);
         usuario.setPasswordHash(null);
         return usuario;
+    }
+
+    public void delete(Integer deleteId, User usuarioLogado){
+        if(usuarioLogado.getRole() != Role.ADMIN)
+            throw new UnauthorizedException("Acesso negado: apenas administradores podem deletar usuários");
+
+        User usuario = this.findById(deleteId);
+        this.repository.delete(usuario);
     }
 
     public Boolean compararSenha(String senha, User usuario){

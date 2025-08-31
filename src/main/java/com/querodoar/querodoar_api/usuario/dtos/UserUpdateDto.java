@@ -11,24 +11,18 @@ import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
-public class UserCreateDto {
-    //@Schema(description = "Informe o ID do endereço já cadastrado", example = "1")
-    //private Integer addressId;
+public class UserUpdateDto {
+    @Schema(description = "Endereço do usuário")
+    private AddressCreateDto address;
 
-   @Schema(description = "Endereço do usuário")
-   private AddressCreateDto address;
-
-    @NotBlank(message="O nome é obrigatório")
     @Size(min=3, max=100, message="O nome deve ter entre 3 e 100 caracteres")
     @Schema(description = "Nome completo do usuário", example = "Eduardo Rodrigo")
     private String name;
 
-    @NotBlank(message="O email é obrigatório")
     @Email(message="O email deve ser valido")
     @Schema(description = "Email do usuário", example = "eduardo@email.com")
     private String email;
 
-    @NotBlank(message = "O CPF é obrigatório")
     @Size(min = 11, max = 11, message = "O CPF deve ter 11 números")
     @Schema(description = "CPF do usuário", example = "24427062024")
     private String cpf;
@@ -37,7 +31,6 @@ public class UserCreateDto {
     @Schema(description = "Data de nascimento do usuário", example = "1990-01-01")
     private LocalDate birthday;
 
-    @NotBlank(message="A senha é obrigatória")
     @Size(min = 6, max = 20, message = "A senha deve ter entre 6 e 20 caracteres")
     @Pattern(
             regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).+$",

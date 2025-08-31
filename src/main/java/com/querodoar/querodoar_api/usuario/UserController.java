@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,12 +26,12 @@ public class UserController {
 
     @Operation(summary = "Lista todos os usuários")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
-        @ApiResponse(responseCode = "401", description = "Não autorizado")
+            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     @GetMapping
-    public ResponseEntity<List<User>> getAll(){
-        List<User> usuarios = this.service.getAll();
+    public ResponseEntity<Page<User>> getAll(Pageable pageable){
+        Page<User> usuarios = this.service.getAll(pageable);
         return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 
@@ -48,5 +50,21 @@ public class UserController {
 
         User usuario = this.service.create(dto, usuarioId);
         return new ResponseEntity<>(usuario, HttpStatus.CREATED);
+    }
+
+    @Operation(summary  = "Delete de usuarios por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario deletado com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable int id, Authentication auth){
+        Integer usuarioId     = (Integer) auth.getPrincipal();
+        User usuarioLogado = service.findById(usuarioId);
+        if(usuarioLogado.getRole() != Role.ADMIN)
+            throw new UnauthorizedException("Acesso negado: apenas administradores podem deletar usuários");
+
+        this.service.delete(id, usuarioLogado);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
