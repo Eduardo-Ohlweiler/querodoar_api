@@ -2,6 +2,9 @@ package com.querodoar.querodoar_api.usuario;
 
 import com.querodoar.querodoar_api.address.Address;
 import com.querodoar.querodoar_api.address.AddressRepository;
+import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
+import com.querodoar.querodoar_api.city.City;
+import com.querodoar.querodoar_api.city.CityRepository;
 import com.querodoar.querodoar_api.exceptions.ConflictException;
 import com.querodoar.querodoar_api.exceptions.NotFoundException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
@@ -19,6 +22,9 @@ public class UserService {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private CityRepository cityRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -60,11 +66,25 @@ public class UserService {
         usuario.setWhatsapp(dto.getWhatsapp());
         usuario.setPasswordHash(passwordEncoder.encode(dto.getPassword_hash()));
 
-        if(dto.getAddressId() != null){
-            Address endereco = addressRepository.findById(dto.getAddressId())
-                    .orElseThrow(() -> new NotFoundException("Endereço não encontrado"));
+        // Cria address se vier no DTO
+        if (dto.getAddress() != null) {
+            AddressCreateDto addrDto = dto.getAddress();
+            Address address = new Address();
 
-            usuario.setAddress(endereco);
+            // Associa cidade existente
+            City city = cityRepository.findById(addrDto.getCityId())
+                    .orElseThrow(() -> new NotFoundException("Cidade não encontrada"));
+            address.setCity(city);
+
+            address.setPostalCode(addrDto.getPostalCode());
+            address.setStreet(addrDto.getStreet());
+            address.setNumber(addrDto.getNumber());
+            address.setNeighborhood(addrDto.getNeighborhood());
+            address.setComplement(addrDto.getComplement());
+            address.setReference(addrDto.getReference());
+
+            addressRepository.save(address);
+            usuario.setAddress(address);
         }
 
         if(usuarioId != null){

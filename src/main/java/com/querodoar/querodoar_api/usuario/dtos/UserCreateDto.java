@@ -10,15 +10,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class UserCreateDto {
-    @Schema(description = "Informe o ID do endereço já cadastrado", example = "1")
-    private Integer addressId;
+    //@Schema(description = "Informe o ID do endereço já cadastrado", example = "1")
+    //private Integer addressId;
 
-    //@NotNull(message = "O endereço é obrigatório")
-   // @Schema(description = "Endereço do usuário")
-    //private AddressCreateDto address;
+   @Schema(description = "Endereço do usuário")
+   private AddressCreateDto address;
 
     @NotBlank(message="O nome é obrigatório")
     @Size(min=3, max=100, message="O nome deve ter entre 3 e 100 caracteres")
@@ -82,29 +80,12 @@ public class UserCreateDto {
     @Schema(description = "Indica se o usuário está verificado")
     private boolean verified;
 
-/*
-    public Long getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
-    }
-
     public AddressCreateDto getAddress() {
         return address;
     }
 
     public void setAddress(AddressCreateDto address) {
         this.address = address;
-    }*/
-
-    public Integer getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(Integer addressId) {
-        this.addressId = addressId;
     }
 
     public String getName() {
