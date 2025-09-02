@@ -2,6 +2,7 @@ package com.querodoar.querodoar_api.usuario;
 
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
+import com.querodoar.querodoar_api.usuario.dtos.UserUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -66,5 +67,17 @@ public class UserController {
 
         this.service.delete(id, usuarioLogado);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "Atualiza um usuario por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Atualizado com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
+    })
+    @PatchMapping("/{id}")
+    public ResponseEntity<User> update(@PathVariable Integer id, @Valid @RequestBody UserUpdateDto dto, Authentication auth){
+        Integer usuarioId = (Integer) auth.getPrincipal();
+        User usuario      = this.service.update(id, dto, usuarioId);
+        return new ResponseEntity<>(usuario, HttpStatus.OK);
     }
 }

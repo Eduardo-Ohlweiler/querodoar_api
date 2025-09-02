@@ -9,6 +9,7 @@ import com.querodoar.querodoar_api.exceptions.ConflictException;
 import com.querodoar.querodoar_api.exceptions.NotFoundException;
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
+import com.querodoar.querodoar_api.usuario.dtos.UserUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -97,6 +98,78 @@ public class UserService {
                     usuario.setRole(dto.getRole());
                 }
             }
+        }
+
+        this.repository.save(usuario);
+        usuario.setPasswordHash(null);
+        return usuario;
+    }
+
+    public User update(Integer id, UserUpdateDto dto, Integer usuarioId){
+        User usuario = this.findById(id);
+        if(usuario == null)
+            throw new NotFoundException("Usuario não encontrado");
+
+        if(usuarioId != null){
+            User usuario_logado = this.findById(usuarioId);
+            if(usuario_logado != null){
+                if (usuario_logado.getRole() == Role.USER && !usuario_logado.getId().equals(usuario.getId())) {
+                    throw new UnauthorizedException("Acesso negado: Apenas administradores podem editar usuários");
+                }
+                if(usuario_logado.getRole() == Role.ADMIN){
+                    usuario.setRole(dto.getRole());
+                }
+            }
+        }
+
+        if(dto.getName() != null)
+            usuario.setName(dto.getName());
+        if(dto.getEmail() != null)
+            usuario.setEmail(dto.getEmail());
+        if(dto.getCpf() != null)
+            usuario.setCpf(dto.getCpf());
+        if(dto.getBirthday() != null)
+            usuario.setBirthday(dto.getBirthday());
+        if(dto.getCell_phone() != null)
+            usuario.setCellPhone(dto.getCell_phone());
+        if(dto.getHome_phone() != null)
+            usuario.setHomePhone(dto.getHome_phone());
+        if(dto.getWhatsapp() != null)
+            usuario.setWhatsapp(dto.getWhatsapp());
+        if(dto.getPassword_hash() != null)
+            usuario.setPasswordHash(passwordEncoder.encode(dto.getPassword_hash()));
+
+        if (dto.getAddress() != null) {
+            AddressCreateDto addrDto = dto.getAddress();
+            Address address;
+
+            if (usuario.getAddress() != null) {
+                address = usuario.getAddress();
+            } else {
+                address = new Address();
+            }
+
+            if(addrDto.getCityId() != null) {
+                City city = cityRepository.findById(addrDto.getCityId())
+                        .orElseThrow(() -> new NotFoundException("Cidade não encontrada"));
+                address.setCity(city);
+            }
+
+            if(addrDto.getPostalCode() != null)
+                address.setPostalCode(addrDto.getPostalCode());
+            if(addrDto.getStreet() != null)
+                address.setStreet(addrDto.getStreet());
+            if(addrDto.getNumber() != null)
+                address.setNumber(addrDto.getNumber());
+            if(addrDto.getNeighborhood() != null)
+                address.setNeighborhood(addrDto.getNeighborhood());
+            if(addrDto.getComplement() != null)
+                address.setComplement(addrDto.getComplement());
+            if(addrDto.getReference() != null)
+                address.setReference(addrDto.getReference());
+
+            addressRepository.save(address);
+            usuario.setAddress(address);
         }
 
         this.repository.save(usuario);
