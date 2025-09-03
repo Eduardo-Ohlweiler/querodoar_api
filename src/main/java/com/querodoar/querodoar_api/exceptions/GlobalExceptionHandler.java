@@ -21,6 +21,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ExceptionResponseDto> handleConflictException(ForbiddenException ex){
+        ExceptionResponseDto response = new ExceptionResponseDto(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ExceptionResponseDto> handleUnauthorizedException(UnauthorizedException ex){
         ExceptionResponseDto response = new ExceptionResponseDto(ex.getMessage());

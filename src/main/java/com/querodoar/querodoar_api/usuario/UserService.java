@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -106,20 +105,17 @@ public class UserService {
     }
 
     public User update(Integer id, UserUpdateDto dto, Integer usuarioId){
-        User usuario = this.findById(id);
-        if(usuario == null)
-            throw new NotFoundException("Usuario não encontrado");
+        if(usuarioId == null)
+            throw new UnauthorizedException("Acesso negado: Apenas usuarios autenticados podem realizar essa ação");
 
-        if(usuarioId != null){
-            User usuario_logado = this.findById(usuarioId);
-            if(usuario_logado != null){
-                if (usuario_logado.getRole() == Role.USER && !usuario_logado.getId().equals(usuario.getId())) {
-                    throw new UnauthorizedException("Acesso negado: Apenas administradores podem editar usuários");
-                }
-                if(usuario_logado.getRole() == Role.ADMIN){
-                    usuario.setRole(dto.getRole());
-                }
-            }
+        User usuario = this.findById(id);
+        User usuario_logado = this.findById(usuarioId);
+
+        if (usuario_logado.getRole() == Role.USER && !usuario_logado.getId().equals(usuario.getId())) {
+            throw new UnauthorizedException("Acesso negado: Apenas administradores podem editar usuários");
+        }
+        if(usuario_logado.getRole() == Role.ADMIN){
+            usuario.setRole(dto.getRole());
         }
 
         if(dto.getName() != null)
