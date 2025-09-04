@@ -11,7 +11,7 @@ Descrição:
     adiciona uma coluna para armazenar a foto do usuário na tabela User.
 
 Objetivo:
-    Garantir que quanto um usuário for criado, um registro correspondente seja
+    Garantir que quando um usuário for criado, um registro correspondente seja
     automaticamente adicionado à tabela Leveling, iniciando o sistema de níveis
     e experiência. Também permite armazenar a foto do usuário.
 
