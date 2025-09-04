@@ -25,7 +25,7 @@ Observações:
 */
 
 BEGIN;
-    --##################### FOTO DO PACIENTE #####################
+    --##################### FOTO DO USUÁRIO #####################
 
     -- Adiciona a coluna photo na tabela User para armazenar a foto do usuário
     ALTER TABLE IF EXISTS public."user"
