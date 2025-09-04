@@ -70,6 +70,10 @@ public class UserUpdateDto {
     @Schema(description = "Indica se o usuário está verificado")
     private boolean verified;
 
+    @Size(min = 0, max = 255, message = "O nome do arquivodeve ter no máximo 255 caracteres")
+    @Schema(description = "Nome do arquivo da foto do usuário", example = "photo.jpg")
+    private String photo;
+
     public AddressCreateDto getAddress() {
         return address;
     }
@@ -165,4 +169,8 @@ public class UserUpdateDto {
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
+
+    public String getPhoto() { return photo; }
+
+    public void setPhoto(String photo) { this.photo = photo; }
 }

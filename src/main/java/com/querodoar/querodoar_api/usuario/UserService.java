@@ -168,6 +168,10 @@ public class UserService {
             usuario.setAddress(address);
         }
 
+        if(dto.getPhoto() != null) {
+            usuario.setPhoto(dto.getPhoto());
+        }
+
         this.repository.save(usuario);
         usuario.setPasswordHash(null);
         return usuario;
