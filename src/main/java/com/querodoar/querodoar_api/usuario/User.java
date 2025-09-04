@@ -57,6 +57,9 @@ public class User {
     @Column(name = "whatsapp")
     private String whatsapp;
 
+    @Column(name = "photo", length = 256, unique = true, nullable = true)
+    private String photo;
+
     public Integer getId() {
         return id;
     }
@@ -156,4 +159,8 @@ public class User {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    public String getPhoto() { return photo; }
+
+    public void setPhoto(String photo) { this.photo = photo; }
 }
