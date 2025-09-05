@@ -1,7 +1,10 @@
 package com.querodoar.querodoar_api.usuario;
 
 import com.querodoar.querodoar_api.address.Address;
+import com.querodoar.querodoar_api.city.City;
+import com.querodoar.querodoar_api.city.entity.State;
 import jakarta.persistence.*;
+import org.hibernate.Hibernate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,12 +18,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Integer id;
+//
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(
+//            name = "address_id",
+//            foreignKey = @ForeignKey(name = "user_address_fk")
+//    )
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "address_id",
-            foreignKey = @ForeignKey(name = "user_address_fk")
-    )
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "address_id", nullable = true)
     private Address address;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -163,4 +169,16 @@ public class User {
     public String getPhoto() { return photo; }
 
     public void setPhoto(String photo) { this.photo = photo; }
+
+    public void unproxy() {
+        if (this.getAddress() != null) {
+            this.setAddress((Address) Hibernate.unproxy(this.getAddress()));
+            if (this.getAddress().getCity() != null) {
+                this.getAddress().setCity((City) Hibernate.unproxy(this.getAddress().getCity()));
+                if (this.getAddress().getCity().getState() != null) {
+                    this.getAddress().getCity().setState((State) Hibernate.unproxy(this.getAddress().getCity().getState()));
+                }
+            }
+        }
+    }
 }

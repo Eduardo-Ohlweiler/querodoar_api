@@ -1,6 +1,5 @@
 package com.querodoar.querodoar_api.usuario;
 
-import com.querodoar.querodoar_api.config.DefaultMediaInitializer;
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
 import com.querodoar.querodoar_api.usuario.dtos.UserUpdateDto;
@@ -26,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -163,5 +160,29 @@ public class UserController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Retorna os dados de um usuário pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Dados do usuário retornados com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(
+            @Parameter(description = "ID do usuário", required = true)
+            @PathVariable Integer userId,
+            Authentication auth
+    ){
+        Integer loggedUserId = (Integer) auth.getPrincipal();
+        User loggedUser = service.findById(loggedUserId);
+
+        if(!loggedUserId.equals(userId) && loggedUser.getRole() != Role.ADMIN)
+            throw new UnauthorizedException("Acesso negado: apenas administradores podem acessar dados de outros usuários");
+
+        User user = this.service.findById(userId);
+        user.unproxy();
+        user.setPasswordHash(null);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
