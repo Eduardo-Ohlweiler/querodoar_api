@@ -1,44 +1,57 @@
 package com.querodoar.querodoar_api.address;
 
 import com.querodoar.querodoar_api.city.City;
-import com.querodoar.querodoar_api.usuario.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
+@Table(name = "address")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address_id")
+    @Column(name = "address_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(
-            name = "city_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "city_fk")
-    )
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "city_id", nullable = false)
     private City city;
 
-    @Column(name = "postal_code", nullable = false, length = 9)
+    @Size(max = 8)
+    @NotNull
+    @Column(name = "postal_code", nullable = false, length = 8)
     private String postalCode;
 
+    @Size(max = 150)
+    @NotNull
     @Column(name = "street", nullable = false, length = 150)
     private String street;
 
-    @Column(name = "number", nullable = false, length = 20)
+    @Size(max = 40)
+    @NotNull
+    @Column(name = "number", nullable = false, length = 40)
     private String number;
 
+    @Size(max = 100)
+    @NotNull
     @Column(name = "neighborhood", nullable = false, length = 100)
     private String neighborhood;
 
+    @Size(max = 100)
     @Column(name = "complement", length = 100)
     private String complement;
 
+    @Size(max = 150)
     @Column(name = "reference", length = 150)
     private String reference;
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public City getCity() {
@@ -96,4 +109,5 @@ public class Address {
     public void setReference(String reference) {
         this.reference = reference;
     }
+
 }
