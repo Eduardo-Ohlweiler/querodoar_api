@@ -115,7 +115,8 @@ public class UserService {
             throw new UnauthorizedException("Acesso negado: Apenas administradores podem editar usuários");
         }
         if(usuario_logado.getRole() == Role.ADMIN){
-            usuario.setRole(dto.getRole());
+            if(dto.getRole() != null)
+                usuario.setRole(dto.getRole());
         }
 
         if(dto.getName() != null)
