@@ -162,25 +162,44 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Retorna os dados de um usuário pelo ID")
+    @Operation(summary = "Retorna os dados de um usuário quando encontrado pelo ID ou email." +
+            "Caso ambos parâmetros sejam fornecidos, a busca será feita prioritariamente pelo ID do usuário.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Dados do usuário retornados com sucesso"),
-            @ApiResponse(responseCode = "401", description = "Não autorizado"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos", content = @Content)
     })
-    @GetMapping("/{userId}")
+    @GetMapping("/search")
     public ResponseEntity<User> getUserById(
-            @Parameter(description = "ID do usuário", required = true)
-            @PathVariable Integer userId,
+            @RequestParam(required = false)
+            Integer userId,
+            @RequestParam(required = false)
+            String email,
             Authentication auth
     ){
+        if(userId == null && (email == null || email.isEmpty())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        User user = null;
+
+        if(userId != null) {
+            user = this.service.findById(userId);
+        } else {
+            user = this.service.findByEmail(email);
+        }
+
+        if(user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         Integer loggedUserId = (Integer) auth.getPrincipal();
         User loggedUser = service.findById(loggedUserId);
 
-        if(!loggedUserId.equals(userId) && loggedUser.getRole() != Role.ADMIN)
+        if(!loggedUserId.equals(user.getId()) && loggedUser.getRole() != Role.ADMIN)
             throw new UnauthorizedException("Acesso negado: apenas administradores podem acessar dados de outros usuários");
 
-        User user = this.service.findById(userId);
         user.unproxy();
         user.setPasswordHash(null);
         return new ResponseEntity<>(user, HttpStatus.OK);
