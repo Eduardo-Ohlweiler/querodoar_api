@@ -170,6 +170,8 @@ public class UserService {
 
         if(dto.getPhoto() != null) {
             usuario.setPhoto(dto.getPhoto());
+        } else if (dto.getPhoto().isEmpty()) {
+            usuario.setPhoto(null);
         }
 
         this.repository.save(usuario);
