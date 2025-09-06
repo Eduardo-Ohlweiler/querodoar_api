@@ -10,6 +10,7 @@ import com.querodoar.querodoar_api.exceptions.NotFoundException;
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
 import com.querodoar.querodoar_api.usuario.dtos.UserUpdateDto;
+import com.querodoar.querodoar_api.usuario.view.VUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,9 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private VUserRepository vUserRepository;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -190,5 +194,21 @@ public class UserService {
 
     public Boolean compararSenha(String senha, User usuario){
         return this.passwordEncoder.matches(senha, usuario.getPasswordHash());
+    }
+
+    public VUser findVUserById(Integer id) throws NotFoundException {
+        Optional<VUser> vUser = this.vUserRepository.findByUserId(id);
+        if(vUser.isEmpty())
+            throw new NotFoundException("Usuario não encontrado");
+
+        return vUser.get();
+    }
+
+    public VUser findVUserByEmail(String email) throws NotFoundException {
+        Optional<VUser> vUser = this.vUserRepository.findByEmail(email);
+        if(vUser.isEmpty())
+            throw new NotFoundException("Usuario não encontrado");
+
+        return vUser.get();
     }
 }
