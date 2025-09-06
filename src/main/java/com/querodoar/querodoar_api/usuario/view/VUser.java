@@ -1,5 +1,10 @@
 package com.querodoar.querodoar_api.usuario.view;
 
+import com.querodoar.querodoar_api.address.view.VAddress;
+import com.querodoar.querodoar_api.gaming.view.VUserDonationAchievement;
+import com.querodoar.querodoar_api.gaming.view.VUserFeedbackAchievement;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,9 +13,6 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
-import java.math.BigDecimal;
-import java.util.Map;
 
 /**
  * Mapping for DB view
@@ -56,23 +58,21 @@ public class VUser {
     @Column(name = "photo", length = 256)
     private String photo;
 
-    @Column(name = "experience")
-    private Integer experience;
-
-    @Column(name = "level", precision = 4)
-    private BigDecimal level;
+    @Column(name = "v_user_statistic")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private VUserStatistic vUserStatistic;
 
     @Column(name = "v_address")
     @JdbcTypeCode(SqlTypes.JSON)
-    private Map<String, Object> vAddress;
+    private VAddress vAddress;
 
-    @Column(name = "v_donation_achievement")
+    @Column(name = "v_user_donation_achievement")
     @JdbcTypeCode(SqlTypes.JSON)
-    private Map<String, Object> vDonationAchievement;
+    private List<VUserDonationAchievement> vUserDonationAchievement;
 
-    @Column(name = "v_feedback_achievement")
+    @Column(name = "v_user_feedback_achievement")
     @JdbcTypeCode(SqlTypes.JSON)
-    private Map<String, Object> vFeedbackAchievement;
+    private List<VUserFeedbackAchievement> vUserFeedbackAchievement;
 
     public Integer getUserId() {
         return userId;
@@ -114,24 +114,20 @@ public class VUser {
         return photo;
     }
 
-    public Integer getExperience() {
-        return experience;
+    public VUserStatistic getVUserStatistic() {
+        return vUserStatistic;
     }
 
-    public BigDecimal getLevel() {
-        return level;
-    }
-
-    public Map<String, Object> getVAddress() {
+    public VAddress getVAddress() {
         return vAddress;
     }
 
-    public Map<String, Object> getVDonationAchievement() {
-        return vDonationAchievement;
+    public List<VUserDonationAchievement> getVUserDonationAchievement() {
+        return vUserDonationAchievement;
     }
 
-    public Map<String, Object> getVFeedbackAchievement() {
-        return vFeedbackAchievement;
+    public List<VUserFeedbackAchievement> getVUserFeedbackAchievement() {
+        return vUserFeedbackAchievement;
     }
 
     protected VUser() {
