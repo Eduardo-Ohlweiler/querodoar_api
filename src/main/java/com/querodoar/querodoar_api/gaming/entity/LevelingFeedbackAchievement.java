@@ -2,8 +2,7 @@ package com.querodoar.querodoar_api.gaming.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-
-import java.time.OffsetTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "leveling_feedback_achievement")
@@ -23,7 +22,7 @@ public class LevelingFeedbackAchievement {
 
     @NotNull
     @Column(name = "date", nullable = false)
-    private OffsetTime date;
+    private OffsetDateTime date;
 
     public LevelingFeedbackAchievementId getId() {
         return id;
@@ -49,11 +48,11 @@ public class LevelingFeedbackAchievement {
         this.feedbackAchievement = feedbackAchievement;
     }
 
-    public OffsetTime getDate() {
+    public OffsetDateTime getDate() {
         return date;
     }
 
-    public void setDate(OffsetTime date) {
+    public void setDate(OffsetDateTime date) {
         this.date = date;
     }
 
