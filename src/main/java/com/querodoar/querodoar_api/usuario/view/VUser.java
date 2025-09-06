@@ -1,10 +1,10 @@
 package com.querodoar.querodoar_api.usuario.view;
 
-import com.querodoar.querodoar_api.address.view.VAddress;
-import com.querodoar.querodoar_api.gaming.view.VUserDonationAchievement;
-import com.querodoar.querodoar_api.gaming.view.VUserFeedbackAchievement;
+import com.querodoar.querodoar_api.address.dtos.VAddressDTO;
+import com.querodoar.querodoar_api.gaming.dto.VUserDonationAchievementDTO;
+import com.querodoar.querodoar_api.gaming.dto.VUserFeedbackAchievementDTO;
 import java.util.List;
-
+import com.querodoar.querodoar_api.usuario.dtos.VUserStatisticDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -60,19 +60,19 @@ public class VUser {
 
     @Column(name = "v_user_statistic")
     @JdbcTypeCode(SqlTypes.JSON)
-    private VUserStatistic vUserStatistic;
+    private VUserStatisticDTO vUserStatistic;
 
     @Column(name = "v_address")
     @JdbcTypeCode(SqlTypes.JSON)
-    private VAddress vAddress;
+    private VAddressDTO vAddress;
 
     @Column(name = "v_user_donation_achievement")
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<VUserDonationAchievement> vUserDonationAchievement;
+    private List<VUserDonationAchievementDTO> vUserDonationAchievement;
 
     @Column(name = "v_user_feedback_achievement")
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<VUserFeedbackAchievement> vUserFeedbackAchievement;
+    private List<VUserFeedbackAchievementDTO> vUserFeedbackAchievement;
 
     public Integer getUserId() {
         return userId;
@@ -114,19 +114,19 @@ public class VUser {
         return photo;
     }
 
-    public VUserStatistic getVUserStatistic() {
+    public VUserStatisticDTO getVUserStatistic() {
         return vUserStatistic;
     }
 
-    public VAddress getVAddress() {
+    public VAddressDTO getVAddress() {
         return vAddress;
     }
 
-    public List<VUserDonationAchievement> getVUserDonationAchievement() {
+    public List<VUserDonationAchievementDTO> getVUserDonationAchievement() {
         return vUserDonationAchievement;
     }
 
-    public List<VUserFeedbackAchievement> getVUserFeedbackAchievement() {
+    public List<VUserFeedbackAchievementDTO> getVUserFeedbackAchievement() {
         return vUserFeedbackAchievement;
     }
 

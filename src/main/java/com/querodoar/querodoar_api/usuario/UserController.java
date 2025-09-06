@@ -3,6 +3,7 @@ package com.querodoar.querodoar_api.usuario;
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
 import com.querodoar.querodoar_api.usuario.dtos.UserUpdateDto;
+import com.querodoar.querodoar_api.usuario.view.VUser;
 import com.querodoar.querodoar_api.utils.ImageProcessor;
 import com.querodoar.querodoar_api.utils.StringUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -202,6 +203,47 @@ public class UserController {
 
         user.unproxy();
         user.setPasswordHash(null);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Retorna os dados da view de usuário (v_user) quando encontrado pelo ID ou email." +
+            "Caso ambos parâmetros sejam fornecidos, a busca será feita prioritariamente pelo ID do usuário.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Dados do usuário retornados com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos", content = @Content)
+    })
+    @GetMapping("/view/search")
+    public ResponseEntity<VUser> getUserViewById(
+            @RequestParam(required = false)
+            Integer userId,
+            @RequestParam(required = false)
+            String email,
+            Authentication auth
+    ){
+        if(userId == null && (email == null || email.isEmpty())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        VUser user = null;
+
+        if(userId != null) {
+            user = this.service.findVUserById(userId);
+        } else {
+            user = this.service.findVUserByEmail(email);
+        }
+
+        if(user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Integer loggedUserId = (Integer) auth.getPrincipal();
+        User loggedUser = service.findById(loggedUserId);
+
+        if(!loggedUserId.equals(user.getUserId()) && loggedUser.getRole() != Role.ADMIN)
+            throw new UnauthorizedException("Acesso negado: apenas administradores podem acessar dados de outros usuários");
+
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.Immutable;
 
-import java.time.OffsetTime;
+import java.time.OffsetDateTime;
 
 /**
  * Mapping for DB view
@@ -20,7 +20,7 @@ public class VUserFeedbackAchievement {
     private VUserFeedbackAchievementId id;
 
     @Column(name = "date")
-    private OffsetTime date;
+    private OffsetDateTime date;
 
     @Column(name = "amount")
     private Integer amount;
@@ -37,7 +37,7 @@ public class VUserFeedbackAchievement {
         this.id = id;
     }
 
-    public OffsetTime getDate() {
+    public OffsetDateTime getDate() {
         return date;
     }
 
