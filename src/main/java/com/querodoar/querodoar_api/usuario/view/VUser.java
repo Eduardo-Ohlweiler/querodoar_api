@@ -4,7 +4,6 @@ import com.querodoar.querodoar_api.address.view.VAddress;
 import com.querodoar.querodoar_api.gaming.view.VUserDonationAchievement;
 import com.querodoar.querodoar_api.gaming.view.VUserFeedbackAchievement;
 import java.util.List;
-import java.util.Map;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
