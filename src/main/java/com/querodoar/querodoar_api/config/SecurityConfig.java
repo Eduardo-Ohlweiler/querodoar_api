@@ -36,6 +36,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+                        //LIBERAÇÃO PARA ROTAS DE FOTOS DE USUÁRIOS E ANÚNCIOS
+                        .requestMatchers("/media/user/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
