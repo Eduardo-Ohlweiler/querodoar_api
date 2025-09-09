@@ -4,51 +4,49 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querodoar.querodoar_api.address.view.VAddress;
 import lombok.Data;
-import lombok.experimental.FieldNameConstants;
 
-@FieldNameConstants
 @Data
 public class VAddressDTO {
-    @JsonProperty(Fields.addressId)
+    @JsonProperty("addressId")
     @JsonAlias("address_id")
     private Integer addressId;
-    @JsonProperty(Fields.cityId)
+    @JsonProperty("cityId")
     @JsonAlias("city_id")
     private Integer cityId;
-    @JsonProperty(Fields.stateId)
+    @JsonProperty("stateId")
     @JsonAlias("state_id")
     private Integer stateId;
-    @JsonProperty(Fields.postalCode)
+    @JsonProperty("postalCode")
     @JsonAlias("postal_code")
     private String postalCode;
-    @JsonProperty(Fields.street)
+    @JsonProperty("street")
     @JsonAlias("street")
     private String street;
-    @JsonProperty(Fields.number)
+    @JsonProperty("number")
     @JsonAlias("number")
     private String number;
-    @JsonProperty(Fields.neighborhood)
+    @JsonProperty("neighborhood")
     @JsonAlias("neighborhood")
     private String neighborhood;
-    @JsonProperty(Fields.complement)
+    @JsonProperty("complement")
     @JsonAlias("complement")
     private String complement;
-    @JsonProperty(Fields.reference)
+    @JsonProperty("reference")
     @JsonAlias("reference")
     private String reference;
-    @JsonProperty(Fields.city)
+    @JsonProperty("city")
     @JsonAlias("city")
     private String city;
-    @JsonProperty(Fields.cityIbgeCode)
+    @JsonProperty("cityIbgeCode")
     @JsonAlias("city_ibge_code")
     private String cityIbgeCode;
-    @JsonProperty(Fields.state)
+    @JsonProperty("state")
     @JsonAlias("state")
     private String state;
-    @JsonProperty(Fields.stateAcronym)
+    @JsonProperty("stateAcronym")
     @JsonAlias("state_acronym")
     private String stateAcronym;
-    @JsonProperty(Fields.stateIbgeCode)
+    @JsonProperty("stateIbgeCode")
     @JsonAlias("state_ibge_code")
     private String stateIbgeCode;
 
@@ -75,4 +73,3 @@ public class VAddressDTO {
         return new VAddressDTO(vAddress);
     }
 }
-

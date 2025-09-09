@@ -4,31 +4,30 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querodoar.querodoar_api.gaming.view.VUserDonationAchievement;
 import lombok.Data;
-import java.time.OffsetDateTime;
-import lombok.experimental.FieldNameConstants;
 
-@FieldNameConstants
+import java.time.OffsetDateTime;
+
 @Data
 public class VUserDonationAchievementDTO {
-    @JsonProperty(Fields.userId)
+    @JsonProperty("userId")
     @JsonAlias("user_id")
     private Integer userId;
-    @JsonProperty(Fields.donationAchievementId)
+    @JsonProperty("donationAchievementId")
     @JsonAlias("donation_achievement_id")
     private Integer donationAchievementId;
-    @JsonProperty(Fields.date)
+    @JsonProperty("date")
     @JsonAlias("date")
     private OffsetDateTime date;
-    @JsonProperty(Fields.amount)
+    @JsonProperty("amount")
     @JsonAlias("amount")
     private Integer amount;
-    @JsonProperty(Fields.donationType)
+    @JsonProperty("donationType")
     @JsonAlias("donation_type")
     private Character donationType;
-    @JsonProperty(Fields.donationTypeIndicator)
+    @JsonProperty("donationTypeIndicator")
     @JsonAlias("donation_type_indicator")
     private String donationTypeIndicator;
-    @JsonProperty(Fields.description)
+    @JsonProperty("description")
     @JsonAlias("description")
     private String description;
 

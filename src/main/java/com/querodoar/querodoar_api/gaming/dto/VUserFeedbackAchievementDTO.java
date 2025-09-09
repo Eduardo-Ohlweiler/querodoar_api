@@ -4,26 +4,24 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querodoar.querodoar_api.gaming.view.VUserFeedbackAchievement;
 import lombok.Data;
-import lombok.experimental.FieldNameConstants;
 
 import java.time.OffsetDateTime;
 
-@FieldNameConstants
 @Data
 public class VUserFeedbackAchievementDTO {
-    @JsonProperty(Fields.userId)
+    @JsonProperty("userId")
     @JsonAlias("user_id")
     private Integer userId;
-    @JsonProperty(Fields.feedbackAchievementId)
+    @JsonProperty("feedbackAchievementId")
     @JsonAlias("feedback_achievement_id")
     private Integer feedbackAchievementId;
-    @JsonProperty(Fields.date)
+    @JsonProperty("date")
     @JsonAlias("date")
     private OffsetDateTime date;
-    @JsonProperty(Fields.amount)
+    @JsonProperty("amount")
     @JsonAlias("amount")
     private Integer amount;
-    @JsonProperty(Fields.description)
+    @JsonProperty("description")
     @JsonAlias("description")
     private String description;
 
