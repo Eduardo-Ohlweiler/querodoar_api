@@ -8,9 +8,14 @@ import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.User;
 import com.querodoar.querodoar_api.usuario.UserService;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
+import com.querodoar.querodoar_api.usuario.dtos.UserCreateMinimalDto;
+import com.querodoar.querodoar_api.usuario.entity.UserToken;
 import com.querodoar.querodoar_api.utils.JwtUtil;
+import com.querodoar.querodoar_api.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.OffsetDateTime;
 
 @Service
 public class AuthService {
@@ -27,6 +32,10 @@ public class AuthService {
         return this.userService.create(dto, null);
     }
 
+    public User create(UserCreateMinimalDto dto){
+        return this.userService.create(dto);
+    }
+
     public Address createAddress(AddressCreateDto dto){
         return this.addressService.create(dto);
     }
@@ -39,5 +48,16 @@ public class AuthService {
             throw new UnauthorizedException("Credenciais inválidas");
 
         return jwtUtil.gerar(usuario.getId(), usuario.getRole());
+    }
+
+    public UserToken createUserToken(char type, User user){
+        UserToken token = new UserToken();
+        token.setUser(user);
+        token.setCreatedAt(OffsetDateTime.now());
+        token.setExpiresAt(OffsetDateTime.now().plusHours(1));
+        token.setType(type);
+        String seed = user.getEmail() + System.currentTimeMillis();
+        token.setToken(StringUtil.generateStringFromSeed(seed, 256, null));
+        return this.userService.saveUserToken(token);
     }
 }

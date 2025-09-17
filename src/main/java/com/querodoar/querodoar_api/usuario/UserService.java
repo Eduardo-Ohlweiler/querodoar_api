@@ -9,6 +9,7 @@ import com.querodoar.querodoar_api.exceptions.ConflictException;
 import com.querodoar.querodoar_api.exceptions.NotFoundException;
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
+import com.querodoar.querodoar_api.usuario.dtos.UserCreateMinimalDto;
 import com.querodoar.querodoar_api.usuario.dtos.UserUpdateDto;
 import com.querodoar.querodoar_api.usuario.entity.UserToken;
 import com.querodoar.querodoar_api.usuario.repository.UserTokenRepository;
@@ -222,7 +223,18 @@ public class UserService {
         return userToken.orElse(null);
     }
 
-    public void saveUserToken(UserToken userToken){
-        this.userTokenRepository.save(userToken);
+    public UserToken saveUserToken(UserToken userToken){
+        return this.userTokenRepository.save(userToken);
+    }
+
+    public User create(UserCreateMinimalDto dto) {
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPasswordHash(passwordEncoder.encode(dto.getPassword_hash()));
+        user.setVerified(false);
+        user.setActive(true);
+        user.setRole(Role.USER);
+        return this.repository.save(user);
     }
 }
