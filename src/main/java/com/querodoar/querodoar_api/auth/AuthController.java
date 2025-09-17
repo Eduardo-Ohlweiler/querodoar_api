@@ -84,6 +84,7 @@ public class AuthController {
         return new ResponseEntity<>(temp, HttpStatus.OK);
     }
 
+    // TODO: Implementar as validações para os demais responses
     @Operation(
             summary = "Cria um novo usuário comum com dados mínimos e envia email de verificação",
             description = "Cria um novo usuário comum no sistema com base nos dados mínimos fornecidos e envia um email de verificação.",
