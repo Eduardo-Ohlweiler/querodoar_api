@@ -10,6 +10,8 @@ import com.querodoar.querodoar_api.exceptions.NotFoundException;
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
 import com.querodoar.querodoar_api.usuario.dtos.UserUpdateDto;
+import com.querodoar.querodoar_api.usuario.entity.UserToken;
+import com.querodoar.querodoar_api.usuario.repository.UserTokenRepository;
 import com.querodoar.querodoar_api.usuario.view.VUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +37,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserTokenRepository userTokenRepository;
 
     public Page<User> getAll(Pageable pageable){
         return this.repository.findAll(pageable);
@@ -210,5 +215,14 @@ public class UserService {
             throw new NotFoundException("Usuario não encontrado");
 
         return vUser.get();
+    }
+
+    public UserToken findUserTokenByToken(String token){
+        Optional<UserToken> userToken = this.userTokenRepository.findByToken(token);
+        return userToken.orElse(null);
+    }
+
+    public void saveUserToken(UserToken userToken){
+        this.userTokenRepository.save(userToken);
     }
 }
