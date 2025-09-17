@@ -99,10 +99,10 @@ public class AuthController {
             }
     )
     @PostMapping("/user/create")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserCreateMinimalDto dto) throws MessagingException {
+    public ResponseEntity<HttpStatus> createUser(@Valid @RequestBody UserCreateMinimalDto dto) throws MessagingException {
         User user = this.service.create(dto);
         UserToken token = this.service.createUserToken('A', user);
         emailService.sendVerificationEmail(user.getEmail(), token.getToken());
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
