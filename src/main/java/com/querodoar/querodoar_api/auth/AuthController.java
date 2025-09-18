@@ -2,6 +2,7 @@ package com.querodoar.querodoar_api.auth;
 
 import com.querodoar.querodoar_api.address.Address;
 import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
+import com.querodoar.querodoar_api.auth.dtos.EmailDto;
 import com.querodoar.querodoar_api.auth.dtos.LoginDto;
 import com.querodoar.querodoar_api.auth.dtos.VerificationDto;
 import com.querodoar.querodoar_api.email.EmailService;
@@ -126,5 +127,28 @@ public class AuthController {
         else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Operation(
+            summary = "Reenvia o email de verificação",
+            description = "Reenvia o email de verificação para o usuário com base no email fornecido.",
+            responses = {
+                @ApiResponse(responseCode = "200", description = "Email de verificação reenviado com sucesso",
+                        content = @Content(schema = @Schema(implementation = String.class))),
+                @ApiResponse(responseCode = "400", description = "Usuário não encontrado ou já verificado",
+                        content = @Content(schema = @Schema(implementation = ExceptionResponseDto.class))),
+                @ApiResponse(responseCode = "500", description = "Erro ao enviar email",
+                        content = @Content(schema = @Schema(implementation = ExceptionResponseDto.class)))
+            }
+    )
+    @PostMapping("/user/resend-verification")
+    public ResponseEntity<HttpStatus> resendVerificationEmail(@Valid @RequestBody EmailDto dto) throws MessagingException {
+        User user = this.service.findUserByEmail(dto.getEmail());
+        if(user == null || user.getVerified()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        UserToken token = this.service.createUserToken('A', user);
+        emailService.sendVerificationEmail(user.getEmail(), token.getToken());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

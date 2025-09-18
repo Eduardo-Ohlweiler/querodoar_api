@@ -88,4 +88,8 @@ public class AuthService {
 
         return true;
     }
+
+    public User findUserByEmail(String email) {
+        return this.userService.findByEmail(email);
+    }
 }
