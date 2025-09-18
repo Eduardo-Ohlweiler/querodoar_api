@@ -105,9 +105,19 @@ public class AuthService {
     }
 
     @Transactional
-    public void resetPassword(ResetPasswordDto dto) {
+    public User resetPassword(ResetPasswordDto dto) {
         UserToken userToken = this.userService.findUserTokenByToken(dto.getToken());
         User user = userToken.getUser();
         user.setPasswordHash(this.passwordEncoder.encode(dto.getNewPassword()));
+        return user;
+    }
+
+    @Transactional
+    public User findUserByUserToken(String token) {
+        UserToken userToken = this.userService.findUserTokenByToken(token);
+        if (userToken == null) {
+            return null;
+        }
+        return userToken.getUser();
     }
 }

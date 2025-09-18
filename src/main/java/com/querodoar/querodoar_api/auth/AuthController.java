@@ -121,8 +121,10 @@ public class AuthController {
             }
     )
     @PostMapping("/user/verification")
-    public ResponseEntity<HttpStatus> verifyUserAccount(@Valid @RequestBody VerificationDto dto) {
+    public ResponseEntity<HttpStatus> verifyUserAccount(@Valid @RequestBody VerificationDto dto) throws MessagingException {
         if(this.service.validateUserToken(dto.getToken(), 'A')) {
+            User user = this.service.findUserByUserToken(dto.getToken());
+            this.emailService.sendNoticeAccountActivated(user.getEmail());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
@@ -187,9 +189,10 @@ public class AuthController {
             }
     )
     @PostMapping("/user/reset-password")
-    public ResponseEntity<HttpStatus> resetPassword(@Valid @RequestBody ResetPasswordDto dto) {
+    public ResponseEntity<HttpStatus> resetPassword(@Valid @RequestBody ResetPasswordDto dto) throws MessagingException {
         if(this.service.validateUserToken(dto.getToken(), 'P')) {
-            this.service.resetPassword(dto);
+            User user = this.service.resetPassword(dto);
+            this.emailService.sendNoticePasswordChanged(user.getEmail());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {

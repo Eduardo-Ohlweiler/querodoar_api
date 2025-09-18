@@ -35,6 +35,18 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    public void sendNoticeAccountActivated(String to) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setFrom(senderEmail);
+        helper.setTo(to);
+        helper.setSubject("Conta Ativada - Quero Doar");
+        String htmlContent = "<p>Sua conta no Quero Doar foi ativada com sucesso!</p>" +
+                "<p>Agora você pode fazer login e começar a usar nossos serviços.</p>";
+        helper.setText(htmlContent, true);
+        mailSender.send(message);
+    }
+
     public void sendRecoveryPasswordEmail(String to, String token) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -46,6 +58,18 @@ public class EmailService {
                 "<p>Por favor, clique no link abaixo para redefinir sua senha:</p>" +
                 "<a href=\"" + recoveryLink + "\">Redefinir Senha</a>" +
                 "<p>Se você não solicitou a redefinição de senha, por favor ignore este e-mail.</p>";
+        helper.setText(htmlContent, true);
+        mailSender.send(message);
+    }
+
+    public void sendNoticePasswordChanged(String to) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setFrom(senderEmail);
+        helper.setTo(to);
+        helper.setSubject("Senha Alterada - Quero Doar");
+        String htmlContent = "<p>Sua senha foi alterada com sucesso.</p>" +
+                "<p>Se você não realizou essa alteração, por favor entre em contato conosco imediatamente.</p>";
         helper.setText(htmlContent, true);
         mailSender.send(message);
     }
