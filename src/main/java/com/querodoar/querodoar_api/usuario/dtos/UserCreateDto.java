@@ -72,10 +72,10 @@ public class UserCreateDto {
     private String whatsapp;
 
     @Schema(description = "Indica se o usuário está ativo")
-    private boolean is_active;
+    private boolean is_active = true;
 
     @Schema(description = "Indica se o usuário está verificado")
-    private boolean verified;
+    private boolean verified = false;
 
     public AddressCreateDto getAddress() {
         return address;

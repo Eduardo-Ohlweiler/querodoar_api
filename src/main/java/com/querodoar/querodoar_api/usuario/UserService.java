@@ -9,7 +9,10 @@ import com.querodoar.querodoar_api.exceptions.ConflictException;
 import com.querodoar.querodoar_api.exceptions.NotFoundException;
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
+import com.querodoar.querodoar_api.usuario.dtos.UserCreateMinimalDto;
 import com.querodoar.querodoar_api.usuario.dtos.UserUpdateDto;
+import com.querodoar.querodoar_api.usuario.entity.UserToken;
+import com.querodoar.querodoar_api.usuario.repository.UserTokenRepository;
 import com.querodoar.querodoar_api.usuario.view.VUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +38,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserTokenRepository userTokenRepository;
 
     public Page<User> getAll(Pageable pageable){
         return this.repository.findAll(pageable);
@@ -184,6 +190,10 @@ public class UserService {
         return usuario;
     }
 
+    public User update(User user){
+        return this.repository.save(user);
+    }
+
     public void delete(Integer deleteId, User usuarioLogado){
         if(usuarioLogado.getRole() != Role.ADMIN)
             throw new UnauthorizedException("Acesso negado: apenas administradores podem deletar usuários");
@@ -210,5 +220,25 @@ public class UserService {
             throw new NotFoundException("Usuario não encontrado");
 
         return vUser.get();
+    }
+
+    public UserToken findUserTokenByToken(String token){
+        Optional<UserToken> userToken = this.userTokenRepository.findByToken(token);
+        return userToken.orElse(null);
+    }
+
+    public UserToken saveUserToken(UserToken userToken){
+        return this.userTokenRepository.save(userToken);
+    }
+
+    public User create(UserCreateMinimalDto dto) {
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPasswordHash(passwordEncoder.encode(dto.getPassword_hash()));
+        user.setVerified(false);
+        user.setActive(true);
+        user.setRole(Role.USER);
+        return this.repository.save(user);
     }
 }
