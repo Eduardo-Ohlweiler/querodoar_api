@@ -1,3 +1,5 @@
+// TODO: KSG: Acredito que IAM (Identity and Access Management) seria um nome mais apropriado para essa classe
+
 package com.querodoar.querodoar_api.auth;
 
 import com.querodoar.querodoar_api.address.Address;
@@ -12,6 +14,7 @@ import com.querodoar.querodoar_api.usuario.dtos.UserCreateMinimalDto;
 import com.querodoar.querodoar_api.usuario.entity.UserToken;
 import com.querodoar.querodoar_api.utils.JwtUtil;
 import com.querodoar.querodoar_api.utils.StringUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,5 +62,30 @@ public class AuthService {
         String seed = user.getEmail() + System.currentTimeMillis();
         token.setToken(StringUtil.generateStringFromSeed(seed, 256, null));
         return this.userService.saveUserToken(token);
+    }
+
+    @Transactional
+    public boolean validateUserToken(String token, char type) {
+        UserToken userToken = this.userService.findUserTokenByToken(token);
+        if (userToken == null) {
+            return false; // Token não encontrado
+        }
+        if (userToken.getConfirmedAt() != null) {
+            return false; // Já foi confirmado
+        }
+        if (userToken.getExpiresAt().isBefore(OffsetDateTime.now())) {
+            return false; // Expirado
+        }
+        if(userToken.getType() != type) {
+            return false; // Tipo inválido
+        }
+
+        //Define a data de confirmação
+        userToken.setConfirmedAt(OffsetDateTime.now());
+
+        // Marca o usuário como verificado
+        userToken.getUser().setVerified(true);
+
+        return true;
     }
 }

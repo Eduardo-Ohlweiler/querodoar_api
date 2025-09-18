@@ -190,6 +190,10 @@ public class UserService {
         return usuario;
     }
 
+    public User update(User user){
+        return this.repository.save(user);
+    }
+
     public void delete(Integer deleteId, User usuarioLogado){
         if(usuarioLogado.getRole() != Role.ADMIN)
             throw new UnauthorizedException("Acesso negado: apenas administradores podem deletar usuários");

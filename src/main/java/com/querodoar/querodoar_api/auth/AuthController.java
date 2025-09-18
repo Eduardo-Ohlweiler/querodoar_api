@@ -3,6 +3,7 @@ package com.querodoar.querodoar_api.auth;
 import com.querodoar.querodoar_api.address.Address;
 import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
 import com.querodoar.querodoar_api.auth.dtos.LoginDto;
+import com.querodoar.querodoar_api.auth.dtos.VerificationDto;
 import com.querodoar.querodoar_api.email.EmailService;
 import com.querodoar.querodoar_api.exceptions.dto.ExceptionResponseDto;
 import com.querodoar.querodoar_api.usuario.Role;
@@ -105,5 +106,25 @@ public class AuthController {
         UserToken token = this.service.createUserToken('A', user);
         emailService.sendVerificationEmail(user.getEmail(), token.getToken());
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Operation(
+            summary = "Verifica a conta do usuário",
+            description = "Verifica a conta do usuário com base no token fornecido.",
+            responses = {
+                @ApiResponse(responseCode = "200", description = "Conta verificada com sucesso",
+                        content = @Content(schema = @Schema(implementation = String.class))),
+                @ApiResponse(responseCode = "400", description = "Token inválido, não encontrado ou expirado",
+                        content = @Content(schema = @Schema(implementation = ExceptionResponseDto.class)))
+            }
+    )
+    @PostMapping("/user/verification")
+    public ResponseEntity<HttpStatus> verifyUserAccount(@Valid @RequestBody VerificationDto dto) {
+        if(this.service.validateUserToken(dto.getToken(), 'A')) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
