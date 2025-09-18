@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 public class ResetPasswordDto {
     @NotBlank(message="O token é obrigatório")
-    @Size(min = 256, max = 256, message = "O token deve) ter 256 caracteres")
     private String token;
 
     @NotBlank(message="A nova senha é obrigatória")
