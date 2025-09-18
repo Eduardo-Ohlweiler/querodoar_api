@@ -50,6 +50,12 @@ public class AuthService {
         if(!match)
             throw new UnauthorizedException("Credenciais inválidas");
 
+        if(!usuario.getVerified())
+            throw new UnauthorizedException("Usuário não verificado");
+
+        if(!usuario.getActive())
+            throw new UnauthorizedException("Usuário inativo");
+
         return jwtUtil.gerar(usuario.getId(), usuario.getRole());
     }
 
