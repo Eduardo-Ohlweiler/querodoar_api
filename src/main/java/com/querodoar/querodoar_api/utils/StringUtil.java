@@ -5,9 +5,25 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Base64;
 
 @Component
 public class StringUtil {
+
+
+    /**
+     * Gera uma string segura aleatória de 256 bits codificada em Base64 URL-safe.
+     * @return String aleatória segura.
+     */
+    public static String secureRandomString() {
+        SecureRandom rng = new SecureRandom();
+        byte[] bytes = new byte[32]; // 256 bits
+        rng.nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+
+
     /**
      * Gera uma string baseada em um seed, tamanho e charset.
      * @param seed Valor base para geração da string.

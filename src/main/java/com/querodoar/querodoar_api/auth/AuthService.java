@@ -6,6 +6,7 @@ import com.querodoar.querodoar_api.address.Address;
 import com.querodoar.querodoar_api.address.AddressService;
 import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
 import com.querodoar.querodoar_api.auth.dtos.LoginDto;
+import com.querodoar.querodoar_api.auth.dtos.ResetPasswordDto;
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.User;
 import com.querodoar.querodoar_api.usuario.UserService;
@@ -16,6 +17,7 @@ import com.querodoar.querodoar_api.utils.JwtUtil;
 import com.querodoar.querodoar_api.utils.StringUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -30,6 +32,9 @@ public class AuthService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public User create(UserCreateDto dto){
         return this.userService.create(dto, null);
@@ -66,7 +71,7 @@ public class AuthService {
         token.setExpiresAt(OffsetDateTime.now().plusHours(1));
         token.setType(type);
         String seed = user.getEmail() + System.currentTimeMillis();
-        token.setToken(StringUtil.generateStringFromSeed(seed, 256, null));
+        token.setToken(StringUtil.secureRandomString());
         return this.userService.saveUserToken(token);
     }
 
@@ -97,5 +102,12 @@ public class AuthService {
 
     public User findUserByEmail(String email) {
         return this.userService.findByEmail(email);
+    }
+
+    @Transactional
+    public void resetPassword(ResetPasswordDto dto) {
+        UserToken userToken = this.userService.findUserTokenByToken(dto.getToken());
+        User user = userToken.getUser();
+        user.setPasswordHash(this.passwordEncoder.encode(dto.getNewPassword()));
     }
 }

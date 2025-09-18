@@ -35,5 +35,18 @@ public class EmailService {
         mailSender.send(message);
     }
 
-
+    public void sendRecoveryPasswordEmail(String to, String token) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setFrom(senderEmail);
+        helper.setTo(to);
+        helper.setSubject("Recuperação de Senha - Quero Doar");
+        String recoveryLink = frontendUrl + "/password-recovery?token=" + token + "&email=" + to;
+        String htmlContent = "<p>Recebemos uma solicitação para redefinir sua senha no Quero Doar.</p>" +
+                "<p>Por favor, clique no link abaixo para redefinir sua senha:</p>" +
+                "<a href=\"" + recoveryLink + "\">Redefinir Senha</a>" +
+                "<p>Se você não solicitou a redefinição de senha, por favor ignore este e-mail.</p>";
+        helper.setText(htmlContent, true);
+        mailSender.send(message);
+    }
 }
