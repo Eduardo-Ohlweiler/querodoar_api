@@ -26,7 +26,7 @@ public class EmailService {
         helper.setFrom(senderEmail);
         helper.setTo(to);
         helper.setSubject("Ativação de Conta - Quero Doar");
-        String verificationLink = frontendUrl + "/verify?token=" + token;
+        String verificationLink = frontendUrl + "/verify?token=" + token + "&email=" + to;
         String htmlContent = "<p>Obrigado por se registrar no Quero Doar!</p>" +
                 "<p>Por favor, clique no link abaixo para ativar sua conta:</p>" +
                 "<a href=\"" + verificationLink + "\">Ativar Conta</a>" +
