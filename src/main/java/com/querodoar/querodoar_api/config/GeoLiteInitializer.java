@@ -1,12 +1,10 @@
 package com.querodoar.querodoar_api.config;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,19 +17,19 @@ public class GeoLiteInitializer {
     @Value("${geolite2.path:./db/maxmind/}")
     private String geoLite2Path;
 
-    private static final String GEOLITE2_DB_FULL_PATH = "db/maxmind/GeoLite2-City.mmdb";
-    private static final String GEOLITE2_DB_FILENAME = "GeoLite2-City.mmdb";
+    @Value("${geolite2.file-name:GeoLite2-City.mmdb}")
+    private String geoLiteFileName;
 
-    @EventListener(ApplicationReadyEvent.class)
+    @PostConstruct
     public void copyGeoLite2Database() {
         try {
             Path dir = Paths.get(geoLite2Path);
             Files.createDirectories(dir);
-            Path target = dir.resolve(GEOLITE2_DB_FILENAME);
+            Path target = dir.resolve(geoLiteFileName);
             if (Files.notExists(target)) {
-                try (InputStream in = getClass().getClassLoader().getResourceAsStream(GEOLITE2_DB_FULL_PATH)) {
+                try (InputStream in = getClass().getClassLoader().getResourceAsStream(geoLite2Path + geoLiteFileName)) {
                     if (in == null) {
-                        log.warn("GeoLite2 database not found in classpath: {}", GEOLITE2_DB_FULL_PATH);
+                        log.warn("GeoLite2 database not found in classpath: {}", geoLite2Path + geoLiteFileName);
                         return;
                     }
                     java.nio.file.Files.copy(in, target);
