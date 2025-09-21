@@ -1,14 +1,12 @@
 package com.querodoar.querodoar_api.usuario;
 
 import com.querodoar.querodoar_api.address.Address;
-import com.querodoar.querodoar_api.city.City;
+import com.querodoar.querodoar_api.city.entity.City;
 import com.querodoar.querodoar_api.city.entity.State;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "\"user\"")

@@ -3,7 +3,7 @@ package com.querodoar.querodoar_api.usuario;
 import com.querodoar.querodoar_api.address.Address;
 import com.querodoar.querodoar_api.address.AddressRepository;
 import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
-import com.querodoar.querodoar_api.city.City;
+import com.querodoar.querodoar_api.city.entity.City;
 import com.querodoar.querodoar_api.city.CityRepository;
 import com.querodoar.querodoar_api.exceptions.ConflictException;
 import com.querodoar.querodoar_api.exceptions.NotFoundException;
