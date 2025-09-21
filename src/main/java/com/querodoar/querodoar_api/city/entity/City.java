@@ -10,25 +10,25 @@ import org.hibernate.type.SqlTypes;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "state")
-public class State {
+@Table(name = "city")
+public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "state_id", nullable = false)
+    @Column(name = "city_id", nullable = false)
     private Integer id;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "state_id", nullable = false)
+    private State state;
 
     @Size(max = 60)
     @NotNull
     @Column(name = "name", nullable = false, length = 60)
     private String name;
 
-    @Size(max = 2)
     @NotNull
-    @Column(name = "acronym", nullable = false, length = 2)
-    private String acronym;
-
-    @NotNull
-    @Column(name = "ibge_code", nullable = false, precision = 2)
+    @Column(name = "ibge_code", nullable = false, precision = 5)
     private BigDecimal ibgeCode;
 
     @Column(name = "latitude")
@@ -37,9 +37,11 @@ public class State {
     @Column(name = "longitude")
     private Float longitude;
 
-    @Size(max = 60)
-    @Column(name = "region", length = 60)
-    private String region;
+    @Column(name = "capital")
+    private Boolean capital;
+
+    @Column(name = "ddd")
+    private Integer ddd;
 
     @JdbcTypeCode(SqlTypes.OTHER)
     @ColumnDefault("(ll_to_earth((latitude), (longitude)))")
@@ -54,12 +56,20 @@ public class State {
         this.locationCube = locationCube;
     }
 
-    public String getRegion() {
-        return region;
+    public Integer getDdd() {
+        return ddd;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
+    public void setDdd(Integer ddd) {
+        this.ddd = ddd;
+    }
+
+    public Boolean getCapital() {
+        return capital;
+    }
+
+    public void setCapital(Boolean capital) {
+        this.capital = capital;
     }
 
     public Float getLongitude() {
@@ -86,20 +96,20 @@ public class State {
         this.id = id;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAcronym() {
-        return acronym;
-    }
-
-    public void setAcronym(String acronym) {
-        this.acronym = acronym;
     }
 
     public BigDecimal getIbgeCode() {
