@@ -27,6 +27,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
+                .cors().and() // Habilita o processamento de CORS pelo Spring Security
                 .csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth-> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permitir OPTIONS
@@ -40,6 +41,7 @@ public class SecurityConfig {
                         ).permitAll()
                         //LIBERAÇÃO PARA ROTAS DE FOTOS DE USUÁRIOS E ANÚNCIOS
                         .requestMatchers("/media/user/**").permitAll()
+                        .requestMatchers("/api/donation/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
