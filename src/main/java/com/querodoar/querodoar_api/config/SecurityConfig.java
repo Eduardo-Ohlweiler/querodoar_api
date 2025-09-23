@@ -27,7 +27,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-                .cors().and() // Habilita o processamento de CORS pelo Spring Security
+                .cors(cors -> cors.disable())
                 .csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth-> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permitir OPTIONS
@@ -42,7 +42,9 @@ public class SecurityConfig {
                         //LIBERAÇÃO PARA ROTAS DE FOTOS DE USUÁRIOS E ANÚNCIOS
                         .requestMatchers("/media/user/**").permitAll()
                         .requestMatchers("/media/donation/**").permitAll()
+                        //TODO: Isso aqui não está legal, verificar como liberar (acesso anônimo) com PermitAll na controller
                         .requestMatchers("/api/donation/**").permitAll()
+                        .requestMatchers("/api/category/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
