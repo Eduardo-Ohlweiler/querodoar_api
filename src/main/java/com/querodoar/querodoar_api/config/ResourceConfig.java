@@ -9,14 +9,17 @@ public class ResourceConfig implements WebMvcConfigurer {
     @Value("${file.media.user.path:./media/user/}")
     private String userPhotoPath;
 
-    //Implementação necessária quando a lógica de donation for desenvolvida
-    //@Value("${file.media.donation.path:./media/donation/}")
-    //private String donationPhotoPath;
+    @Value("${file.media.donation.path:./media/donation/}")
+    private String donationMediaPath;
 
     @Override
     public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/media/user/**")
                 .addResourceLocations("file:" + userPhotoPath)
+                .setCachePeriod(60 * 60); // Cache por 1 hora
+
+        registry.addResourceHandler("/media/donation/**")
+                .addResourceLocations("file:" + donationMediaPath)
                 .setCachePeriod(60 * 60); // Cache por 1 hora
     }
 }

@@ -1,16 +1,13 @@
 package com.querodoar.querodoar_api.address;
 
 import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
-import com.querodoar.querodoar_api.city.City;
+import com.querodoar.querodoar_api.city.entity.City;
 import com.querodoar.querodoar_api.city.CityRepository;
 import com.querodoar.querodoar_api.exceptions.NotFoundException;
 import com.querodoar.querodoar_api.usuario.User;
 import com.querodoar.querodoar_api.usuario.UserRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 

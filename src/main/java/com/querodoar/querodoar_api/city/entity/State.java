@@ -3,6 +3,9 @@ package com.querodoar.querodoar_api.city.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 
@@ -27,6 +30,53 @@ public class State {
     @NotNull
     @Column(name = "ibge_code", nullable = false, precision = 2)
     private BigDecimal ibgeCode;
+
+    @Column(name = "latitude")
+    private Float latitude;
+
+    @Column(name = "longitude")
+    private Float longitude;
+
+    @Size(max = 60)
+    @Column(name = "region", length = 60)
+    private String region;
+
+    @JdbcTypeCode(SqlTypes.OTHER)
+    @ColumnDefault("(ll_to_earth((latitude), (longitude)))")
+    @Column(name = "location_cube", columnDefinition = "cube")
+    private String locationCube;
+
+    public String getLocationCube() {
+        return locationCube;
+    }
+
+    public void setLocationCube(String locationCube) {
+        this.locationCube = locationCube;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public Float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Float longitude) {
+        this.longitude = longitude;
+    }
+
+    public Float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Float latitude) {
+        this.latitude = latitude;
+    }
 
     public Integer getId() {
         return id;

@@ -21,20 +21,22 @@ public class DefaultMediaInitializer {
     @Value("${file.media.user.path:./media/user/}")
     private String userPhotoPath;
 
-    private static final String DEFAULT_USER_PHOTO_PATH = "media/user/default.webp";
-    private static final String DEFAULT_USER_PHOTO_FILENAME = "default.webp";
+    @Value("${file.media.donation.path:./media/donation/}")
+    private String donationMediaPath;
+
+    private String defaultMediaFileName = "default.webp";
 
     @EventListener(ApplicationReadyEvent.class)
-    public void ensureDefaultMedia() {
+    public void ensureDefaultUserMedia() {
+        // USER
         try {
-            // USER
             Path dir = Paths.get(userPhotoPath);
             Files.createDirectories(dir);
-            Path target = dir.resolve(DEFAULT_USER_PHOTO_FILENAME);
+            Path target = dir.resolve(defaultMediaFileName);
             if (Files.notExists(target)) {
-                try (InputStream in = getClass().getClassLoader().getResourceAsStream(DEFAULT_USER_PHOTO_PATH)) {
+                try (InputStream in = getClass().getClassLoader().getResourceAsStream(userPhotoPath + defaultMediaFileName)) {
                     if (in == null) {
-                        log.warn("Imagem padrão não encontrada no classpath: {}", DEFAULT_USER_PHOTO_PATH);
+                        log.warn("Imagem padrão não encontrada no classpath: {}", userPhotoPath + defaultMediaFileName);
                         return;
                     }
                     Files.copy(in, target);
@@ -45,6 +47,30 @@ public class DefaultMediaInitializer {
             }
         } catch (Exception e) {
             log.error("Falha ao garantir diretório/imagem padrão em {}", userPhotoPath, e);
+        }
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void ensureDefaultDonationMedia() {
+        // DONATION
+        try {
+            Path dir = Paths.get(donationMediaPath);
+            Files.createDirectories(dir);
+            Path target = dir.resolve(defaultMediaFileName);
+            if (Files.notExists(target)) {
+                try (InputStream in = getClass().getClassLoader().getResourceAsStream(donationMediaPath + defaultMediaFileName)) {
+                    if (in == null) {
+                        log.warn("Imagem padrão não encontrada no classpath: {}", donationMediaPath + defaultMediaFileName);
+                        return;
+                    }
+                    Files.copy(in, target);
+                    log.info("Imagem padrão copiada para {}", target);
+                }
+            } else {
+                log.debug("Imagem padrão já existe em {}", target);
+            }
+        } catch (Exception e) {
+            log.error("Falha ao garantir diretório/imagem padrão em {}", donationMediaPath, e);
         }
     }
 }
