@@ -41,6 +41,7 @@ public class SecurityConfig {
                         ).permitAll()
                         //LIBERAÇÃO PARA ROTAS DE FOTOS DE USUÁRIOS E ANÚNCIOS
                         .requestMatchers("/media/user/**").permitAll()
+                        .requestMatchers("/media/donation/**").permitAll()
                         .requestMatchers("/api/donation/**").permitAll()
                         .anyRequest().authenticated()
                 )
