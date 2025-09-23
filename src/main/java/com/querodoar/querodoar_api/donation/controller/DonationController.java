@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,15 +30,24 @@ public class DonationController {
     @Autowired
     private HttpServletRequest request;
 
+    @Value("${spring.profiles.active:prd}")
+    private String activeProfile;
+
     private final Logger log = LoggerFactory.getLogger(DonationController.class);
 
     @GetMapping("/preview/last")
     public ResponseEntity<LastDonationPreviewDTO> getLastDonationPreviews() {
-//        String ipAddress = request.getHeader("X-FORWARDED-FOR");
-//        if (ipAddress == null) {
-//            ipAddress = request.getRemoteAddr();
-//        }
-        String ipAddress = "179.219.209.34"; //apenas para teste local, remover depois
+
+        String ipAddress;
+
+        if (activeProfile.equals("prd")) {
+            ipAddress = request.getHeader("X-Forwarded-For");
+            if (ipAddress == null) {
+                ipAddress = request.getRemoteAddr();
+            }
+        } else {
+            ipAddress = "179.219.209.34"; //apenas para teste local, remover depois
+        }
 
         //log IP
         log.info("Request IP: {}", ipAddress);
