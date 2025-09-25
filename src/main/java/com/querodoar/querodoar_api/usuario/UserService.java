@@ -13,13 +13,16 @@ import com.querodoar.querodoar_api.usuario.dtos.UserCreateMinimalDto;
 import com.querodoar.querodoar_api.usuario.dtos.UserUpdateDto;
 import com.querodoar.querodoar_api.usuario.entity.UserToken;
 import com.querodoar.querodoar_api.usuario.repository.UserTokenRepository;
+import com.querodoar.querodoar_api.usuario.repository.VUserExperienceLastMonthService;
 import com.querodoar.querodoar_api.usuario.view.VUser;
+import com.querodoar.querodoar_api.usuario.view.VUserExperienceLastMonth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +44,9 @@ public class UserService {
 
     @Autowired
     private UserTokenRepository userTokenRepository;
+
+    @Autowired
+    private VUserExperienceLastMonthService vUserExperienceLastMonthService;
 
     public Page<User> getAll(Pageable pageable){
         return this.repository.findAll(pageable);
@@ -240,5 +246,9 @@ public class UserService {
         user.setActive(true);
         user.setRole(Role.USER);
         return this.repository.save(user);
+    }
+
+    public List<VUserExperienceLastMonth> getTopUserExperienceLastMonth(Integer limit) {
+        return this.vUserExperienceLastMonthService.findWithLimit(limit);
     }
 }

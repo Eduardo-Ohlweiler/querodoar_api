@@ -4,6 +4,7 @@ import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
 import com.querodoar.querodoar_api.usuario.dtos.UserCreateDto;
 import com.querodoar.querodoar_api.usuario.dtos.UserUpdateDto;
 import com.querodoar.querodoar_api.usuario.view.VUser;
+import com.querodoar.querodoar_api.usuario.view.VUserExperienceLastMonth;
 import com.querodoar.querodoar_api.utils.ImageProcessor;
 import com.querodoar.querodoar_api.utils.StringUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -245,5 +247,15 @@ public class UserController {
             throw new UnauthorizedException("Acesso negado: apenas administradores podem acessar dados de outros usuários");
 
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/public/hall-of-fame/{top}")
+    public ResponseEntity<List<VUserExperienceLastMonth>> getHallOfFame(@PathVariable int top){
+        // TODO: Verificar valor ideal para o limit com base na página hall da fama
+        if(top <= 0 || top > 53) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        List<VUserExperienceLastMonth> users = this.service.getTopUserExperienceLastMonth(top);
+        return ResponseEntity.ok(users);
     }
 }
