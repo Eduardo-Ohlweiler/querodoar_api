@@ -14,5 +14,5 @@ import java.util.Map;
  */
 @Data
 public class PagedDonationPreviewDTO extends PagedResult<DonationPreviewDTO> {
-    Map<Integer, @Nullable List<Integer>> locationsIds;
+    List<Integer> citiesIds;
 }
