@@ -13,12 +13,6 @@ public class DonationPreviewService {
     private DonationPreviewRepository repository;
 
     public List<DonationPreviewDTO> getLast12DonationPreview(String cityName) {
-        if(cityName == null || cityName.isEmpty()) {
-            List<DonationPreviewDTO> listDonationPreviewDto = this.repository.findDonationPreviewWhereStatusDOrderByDistanceKmAscDateDesc("São Paulo",12);
-            return listDonationPreviewDto.stream()
-                    .peek(dto -> dto.setDistanceKm(-1.0)).toList();
-        } else {
-            return this.repository.findDonationPreviewWhereStatusDOrderByDistanceKmAscDateDesc(cityName, 12);
-        }
+        return this.repository.findDonationPreviewWhereStatusDOrderByDistanceKmAscDateDesc(cityName, 12);
     }
 }
