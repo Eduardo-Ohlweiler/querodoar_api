@@ -1,5 +1,6 @@
 package com.querodoar.querodoar_api.donation.service;
 
+import com.querodoar.querodoar_api.city.service.CityService;
 import com.querodoar.querodoar_api.donation.dto.DonationPreviewDTO;
 import com.querodoar.querodoar_api.donation.dto.PagedDonationPreviewDTO;
 import com.querodoar.querodoar_api.donation.repository.DonationPreviewRepository;
@@ -15,6 +16,9 @@ import java.util.Map;
 public class DonationPreviewService {
     @Autowired
     private DonationPreviewRepository repository;
+
+    @Autowired
+    private CityService cityService;
 
     public List<DonationPreviewDTO> getLast12DonationPreview(String cityName) {
         return this.repository.findDonationPreviewWhereStatusDOrderByDistanceKmAscDateDesc(cityName, 12);
@@ -62,9 +66,15 @@ public class DonationPreviewService {
         }
 
         // Tratamento de locationsIds
+        // Regra de negócio: Se não houver filtro por localidade
+        // exibir doações do mesmo estado da cidade de pesquisa
+        // Caso cityName seja nulo, não foi possível pegar a partir
+        // do IP a cidade do usuário, então não filtrar por localidade
         List<Integer> newCitiesIds =  citiesIds;
-        if(newCitiesIds == null) {
-            // TODO: Se não houver filtro por localidade explicitamente
+        if(newCitiesIds == null && cityName != null) {
+            newCitiesIds = new ArrayList<>();
+            List<Integer> citiesOfSameState = cityService.getCitiesIdsOfStateByCityName(cityName);
+            newCitiesIds.addAll(citiesOfSameState);
         }
 
         PagedDonationPreviewDTO pagedResult = this.repository.searchDonationPreview(
