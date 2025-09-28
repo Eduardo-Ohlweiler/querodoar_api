@@ -47,9 +47,11 @@ public class DonationController {
         String ipAddress = clientIpService.getClientIpAddress(request);
         log.info("Request IP: {}", ipAddress);
 
-        String cityName = null;
+        String cityName;
         if (ipAddress != null) {
             cityName = geoIpService.getCityByIp(ipAddress);
+        } else {
+            cityName = null;
         }
 
         log.info("City by IP: {}", cityName);
@@ -73,6 +75,7 @@ public class DonationController {
      * @param distanceKm
      * @param categoriesIds
      * @param locationsIds
+     * @param tagsIds
      * @return Uma resposta HTTP contendo uma página de pré-visualizações de doações que correspondem
      *         aos critérios de pesquisa.
      *
@@ -82,32 +85,41 @@ public class DonationController {
      */
     @GetMapping("/preview")
     public ResponseEntity<PagedDonationPreviewDTO> searchDonationPreviews(
-            @RequestParam @Valid @NotBlank @Size(min = 3) String searchTerm,
+            @RequestParam(required = false) @Size(min = 3) String searchTerm,
             @RequestParam Integer page,
             @RequestParam Integer size,
             @RequestParam(required = false) Boolean sortByDistance,
             @RequestParam(required = false) Boolean onlyPublic,
             @RequestParam(required = false) Boolean onlyPrivate,
-            @RequestParam(required = false) @Size(min = 1) Integer distanceKm,
-            @RequestParam(required = false) Map<Integer, @Nullable List<Integer>> categoriesIds,
-            @RequestParam(required = false) Map<Integer, @Nullable List<Integer>> locationsIds
+            @RequestParam(required = false) Integer distanceKm,
+            @RequestParam(required = false) List<Integer> subcategoriesIds,
+            @RequestParam(required = false) List<Integer> citiesIds,
+            @RequestParam(required = false) List<Integer> tagsIds
             ) {
 
-//        PagedDonationPreviewDTO pagedResult = donationPreviewService.searchDonationPreviews(
-//                searchTerm,
-//                page,
-//                size,
-//                sortByDistance,
-//                onlyPublic,
-//                onlyPrivate,
-//                distanceKm,
-//                categoriesIds,
-//                locationsIds
-//        );
+        String ipAddress = clientIpService.getClientIpAddress(request);
 
-//        return ResponseEntity.ok(pagedResult);
+        String cityName;
+        if (ipAddress != null) {
+            cityName = geoIpService.getCityByIp(ipAddress);
+        } else {
+            cityName = null;
+        }
 
-        //not implemented yet
-        return ResponseEntity.ok(new PagedDonationPreviewDTO());
+        PagedDonationPreviewDTO pagedDonationPreviewDto = this.donationPreviewService.searchDonationPreview(
+                cityName,
+                searchTerm,
+                page,
+                size,
+                sortByDistance,
+                onlyPublic,
+                onlyPrivate,
+                distanceKm,
+                subcategoriesIds,
+                citiesIds,
+                tagsIds
+        );
+
+        return ResponseEntity.ok(pagedDonationPreviewDto);
     }
 }
