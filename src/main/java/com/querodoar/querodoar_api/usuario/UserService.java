@@ -4,7 +4,7 @@ import com.querodoar.querodoar_api.address.Address;
 import com.querodoar.querodoar_api.address.AddressRepository;
 import com.querodoar.querodoar_api.address.dtos.AddressCreateDto;
 import com.querodoar.querodoar_api.city.entity.City;
-import com.querodoar.querodoar_api.city.CityRepository;
+import com.querodoar.querodoar_api.city.repository.CityRepository;
 import com.querodoar.querodoar_api.exceptions.ConflictException;
 import com.querodoar.querodoar_api.exceptions.NotFoundException;
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
