@@ -1,6 +1,6 @@
 package com.querodoar.querodoar_api.address;
 
-import com.querodoar.querodoar_api.city.entity.City;
+import com.querodoar.querodoar_api.location.entity.City;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

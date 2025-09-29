@@ -1,6 +1,6 @@
 package com.querodoar.querodoar_api.donation.service;
 
-import com.querodoar.querodoar_api.city.service.CityService;
+import com.querodoar.querodoar_api.location.service.LocationService;
 import com.querodoar.querodoar_api.donation.dto.DonationPreviewDTO;
 import com.querodoar.querodoar_api.donation.dto.PagedDonationPreviewDTO;
 import com.querodoar.querodoar_api.donation.repository.DonationPreviewRepository;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class DonationPreviewService {
@@ -18,7 +17,7 @@ public class DonationPreviewService {
     private DonationPreviewRepository repository;
 
     @Autowired
-    private CityService cityService;
+    private LocationService locationService;
 
     public List<DonationPreviewDTO> getLast12DonationPreview(String cityName) {
         return this.repository.findDonationPreviewWhereStatusDOrderByDistanceKmAscDateDesc(cityName, 12);
@@ -73,7 +72,7 @@ public class DonationPreviewService {
         List<Integer> newCitiesIds =  citiesIds;
         if(newCitiesIds == null && cityName != null) {
             newCitiesIds = new ArrayList<>();
-            List<Integer> citiesOfSameState = cityService.getCitiesIdsOfStateByCityName(cityName);
+            List<Integer> citiesOfSameState = locationService.getCitiesIdsOfStateByCityName(cityName);
             newCitiesIds.addAll(citiesOfSameState);
         }
 

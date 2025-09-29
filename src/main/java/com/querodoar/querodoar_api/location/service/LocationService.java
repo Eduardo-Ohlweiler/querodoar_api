@@ -1,14 +1,14 @@
-package com.querodoar.querodoar_api.city.service;
+package com.querodoar.querodoar_api.location.service;
 
-import com.querodoar.querodoar_api.city.repository.CityRepository;
-import com.querodoar.querodoar_api.city.repository.StateRepository;
+import com.querodoar.querodoar_api.location.repository.CityRepository;
+import com.querodoar.querodoar_api.location.repository.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CityService {
+public class LocationService {
     @Autowired
     private StateRepository stateRepository;
 

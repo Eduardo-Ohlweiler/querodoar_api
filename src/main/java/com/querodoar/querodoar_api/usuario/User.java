@@ -1,8 +1,8 @@
 package com.querodoar.querodoar_api.usuario;
 
 import com.querodoar.querodoar_api.address.Address;
-import com.querodoar.querodoar_api.city.entity.City;
-import com.querodoar.querodoar_api.city.entity.State;
+import com.querodoar.querodoar_api.location.entity.City;
+import com.querodoar.querodoar_api.location.entity.State;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
