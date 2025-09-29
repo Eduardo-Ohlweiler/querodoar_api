@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StateMinimal {
-    @JsonProperty("state_id")
-    @JsonAlias("stateId")
+    @JsonProperty("stateId")
+    @JsonAlias("state_id")
     private Integer stateId;
 
     @JsonProperty("name")

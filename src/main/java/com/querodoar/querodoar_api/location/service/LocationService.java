@@ -1,5 +1,7 @@
 package com.querodoar.querodoar_api.location.service;
 
+import com.querodoar.querodoar_api.location.dto.CityMinimal;
+import com.querodoar.querodoar_api.location.dto.StateMinimal;
 import com.querodoar.querodoar_api.location.repository.CityRepository;
 import com.querodoar.querodoar_api.location.repository.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +23,13 @@ public class LocationService {
             return null;
         }
         return cityRepository.findAllCityIdsByStateId(stateId);
+    }
+
+    public List<StateMinimal> getStatesMinimal() {
+        return stateRepository.findAllStateMinimal();
+    }
+
+    public List<CityMinimal> getCitiesMinimalByStateId(Integer stateId) {
+        return cityRepository.findAllCityMinimalByStateId(stateId);
     }
 }

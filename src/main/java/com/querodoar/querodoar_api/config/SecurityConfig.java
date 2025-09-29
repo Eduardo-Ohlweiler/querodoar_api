@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/category/**").permitAll()
                         //TODO: Ideia: deixar um path para cada roda publica (ex: /api/donation/public/**)
                         .requestMatchers("/api/user/public/**").permitAll()
+                        .requestMatchers("/api/location/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

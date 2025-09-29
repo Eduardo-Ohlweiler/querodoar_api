@@ -14,6 +14,6 @@ public interface StateRepository extends JpaRepository<State, Integer> {
     @Query(value = "select state_id from state inner join city using (state_id) where city.name = :cityName", nativeQuery = true)
     Integer findStateIdByCityName(@Param("cityName") String cityName);
 
-    @Query("select new com.querodoar.querodoar_api.location.dto.StateMinimal(s.id, s.name, s.acronym) from State s")
+    @Query("select new com.querodoar.querodoar_api.location.dto.StateMinimal(s.id, s.name, s.acronym) from State s order by s.name")
     List<StateMinimal> findAllStateMinimal();
 }
