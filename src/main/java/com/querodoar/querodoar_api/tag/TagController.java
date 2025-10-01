@@ -1,6 +1,6 @@
 package com.querodoar.querodoar_api.tag;
 
-import com.querodoar.querodoar_api.tag.entity.DonationTag;
+import com.querodoar.querodoar_api.tag.dto.DonationTagDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ public class TagController {
     private TagService tagService;
 
     @GetMapping("/public/all")
-    public ResponseEntity<List<DonationTag>> getAllTags() {
+    public ResponseEntity<List<DonationTagDTO>> getAllTags() {
         return ResponseEntity.ok(tagService.findAll());
     }
 }
