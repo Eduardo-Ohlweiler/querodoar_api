@@ -1,8 +1,8 @@
-package com.querodoar.querodoar_api.tag.dto;
+package com.querodoar.querodoar_api.donation.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.querodoar.querodoar_api.tag.entity.DonationTag;
+import com.querodoar.querodoar_api.donation.entity.DonationTag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

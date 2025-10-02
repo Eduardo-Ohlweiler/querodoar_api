@@ -1,7 +1,7 @@
-package com.querodoar.querodoar_api.tag;
+package com.querodoar.querodoar_api.donation.service;
 
-import com.querodoar.querodoar_api.tag.dto.DonationTagDTO;
-import com.querodoar.querodoar_api.tag.repository.TagRepository;
+import com.querodoar.querodoar_api.donation.dto.DonationTagDTO;
+import com.querodoar.querodoar_api.donation.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

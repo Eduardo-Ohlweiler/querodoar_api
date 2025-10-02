@@ -1,6 +1,7 @@
-package com.querodoar.querodoar_api.tag;
+package com.querodoar.querodoar_api.donation.controller;
 
-import com.querodoar.querodoar_api.tag.dto.DonationTagDTO;
+import com.querodoar.querodoar_api.donation.dto.DonationTagDTO;
+import com.querodoar.querodoar_api.donation.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

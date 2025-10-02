@@ -1,4 +1,4 @@
-package com.querodoar.querodoar_api.tag.entity;
+package com.querodoar.querodoar_api.donation.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

@@ -1,6 +1,5 @@
-package com.querodoar.querodoar_api.tag.entity;
+package com.querodoar.querodoar_api.donation.entity;
 
-import com.querodoar.querodoar_api.donation.entity.Donation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

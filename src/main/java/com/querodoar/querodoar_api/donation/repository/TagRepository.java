@@ -1,6 +1,6 @@
-package com.querodoar.querodoar_api.tag.repository;
+package com.querodoar.querodoar_api.donation.repository;
 
-import com.querodoar.querodoar_api.tag.entity.DonationTag;
+import com.querodoar.querodoar_api.donation.entity.DonationTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
