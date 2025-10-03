@@ -1,3 +1,5 @@
+//TODO: Refatorar os casos de exposição da entidade user (vulnerabilidade de dados)
+
 package com.querodoar.querodoar_api.usuario;
 
 import com.querodoar.querodoar_api.exceptions.UnauthorizedException;
