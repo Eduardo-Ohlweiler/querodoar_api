@@ -11,4 +11,5 @@ public class PagedResult<T> {
     private List<T> elements;
     private long totalElements;
     private int currentPage;
+    private int pageSize;
 }

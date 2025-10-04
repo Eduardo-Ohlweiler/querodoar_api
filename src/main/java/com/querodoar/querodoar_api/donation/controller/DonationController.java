@@ -3,14 +3,11 @@ package com.querodoar.querodoar_api.donation.controller;
 import com.querodoar.querodoar_api.common.service.ClientIpService;
 import com.querodoar.querodoar_api.donation.dto.DonationPreviewDTO;
 import com.querodoar.querodoar_api.donation.dto.LastDonationPreviewDTO;
-import com.querodoar.querodoar_api.donation.dto.PagedDonationPreviewDTO;
 import com.querodoar.querodoar_api.donation.service.DonationPreviewService;
 import com.querodoar.querodoar_api.geoIp.GeoIpService;
+import com.querodoar.querodoar_api.utils.PagedResult;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,16 +80,22 @@ public class DonationController {
      * - O servidor determina o estado de pesquisa com base no IP do usuário caso não informado
      *   nenhum locationId.
      */
-    @GetMapping("/preview")
-    public ResponseEntity<PagedDonationPreviewDTO> searchDonationPreviews(
+    @GetMapping("/preview/search")
+    public ResponseEntity<PagedResult<DonationPreviewDTO>> searchDonationPreviews(
             @RequestParam(required = false) @Size(min = 3) String searchTerm,
-            @RequestParam Integer page,
-            @RequestParam Integer size,
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            // TODO: Definir um valor máximo para 'size' para evitar consultas muito grandes
+            @RequestParam (required = false, defaultValue = "10") Integer size,
             @RequestParam(required = false) Boolean sortByDistance,
             @RequestParam(required = false) Boolean onlyPublic,
             @RequestParam(required = false) Boolean onlyPrivate,
             @RequestParam(required = false) Integer distanceKm,
+            // TODO: Implementar filtro por tipos de doação (D ou P)
+            @RequestParam(required = false) List<Character> donationTypes,
             @RequestParam(required = false) List<Integer> subcategoriesIds,
+            // Regra de negócio: Para os estados listados em statesIds,
+            // trazer doações de todas as cidades destes estados
+            @RequestParam(required = false) List<Integer> statesIds,
             @RequestParam(required = false) List<Integer> citiesIds,
             @RequestParam(required = false) List<Integer> tagsIds
             ) {
@@ -106,7 +109,7 @@ public class DonationController {
             cityName = null;
         }
 
-        PagedDonationPreviewDTO pagedDonationPreviewDto = this.donationPreviewService.searchDonationPreview(
+        PagedResult<DonationPreviewDTO> data = this.donationPreviewService.searchDonationPreview(
                 cityName,
                 searchTerm,
                 page,
@@ -116,10 +119,11 @@ public class DonationController {
                 onlyPrivate,
                 distanceKm,
                 subcategoriesIds,
+                statesIds,
                 citiesIds,
                 tagsIds
         );
 
-        return ResponseEntity.ok(pagedDonationPreviewDto);
+        return ResponseEntity.ok(data);
     }
 }

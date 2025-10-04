@@ -1,8 +1,8 @@
 package com.querodoar.querodoar_api.donation.repository;
 
 import com.querodoar.querodoar_api.donation.dto.DonationPreviewDTO;
-import com.querodoar.querodoar_api.donation.dto.PagedDonationPreviewDTO;
 import com.querodoar.querodoar_api.usuario.dtos.UserMinimalDTO;
+import com.querodoar.querodoar_api.utils.PagedResult;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -45,7 +45,7 @@ public class DonationPreviewRepository {
         return namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> mapResultSetToDonationPreviewDTO(rs));
     }
 
-    public PagedDonationPreviewDTO searchDonationPreview(
+    public PagedResult<DonationPreviewDTO> searchDonationPreview(
             String cityName,
             @Nullable String searchTerm,
             Integer page,
@@ -54,10 +54,12 @@ public class DonationPreviewRepository {
             Boolean isPublic1,
             Boolean isPublic2,
             @Nullable Integer distanceKm,
+            @Nullable List<Integer> statesIds,
             @Nullable List<Integer> citiesIds,
             @Nullable List<Integer> subcategoriesIds,
             @Nullable List<Integer> tagsIds
             ) {
+        // Executa a consulta principal e mapeia os resultados
         String sql = """
                 with distance as (
                 	 select d.city_id, d.distance_km
@@ -70,14 +72,15 @@ public class DonationPreviewRepository {
                 from v_donation_preview v
                 """ + (searchTerm != null ? "    cross join (select plainto_tsquery('portuguese', :searchTherm) AS query) q " : "") + """
                 	inner join distance d on v.city_id = d.city_id
-                	left join donation_tag_map dtm on v.donation_id = dtm.donation_id
+                    inner join city c on v.city_id = c.city_id
                 where
                 	v.status = 'D'
                 	and (v.is_public = :isPublic1 or v.is_public = :isPublic2)
                 """ + (searchTerm != null ? "    and v.document_tsv @@ q.query " : "") + """
                 """ + (citiesIds != null && !citiesIds.isEmpty() ? "   and v.city_id in (:citiesIds) " : "") + """
+                """ + (statesIds != null && !statesIds.isEmpty() ? "   and c.state_id in (:stateIds) " : "") + """
                 """ + (subcategoriesIds != null && !subcategoriesIds.isEmpty() ? "   and v.subcategory_id in (:subcategoriesIds) " : "") + """
-                """ + (tagsIds != null && !tagsIds.isEmpty() ? "   and v.donation_id in (select donation_id from donation_tag_map where donation_tag_id in (:tagsIds)) " : "") + """
+                """ + (tagsIds != null && !tagsIds.isEmpty() ? "   and v.donation_id in (select distinct donation_id from donation_tag_map where donation_tag_id in (:tagsIds)) " : "") + """
                 """ + (distanceKm != null ? "   and d.distance_km <= :distanceKm " : "") + """
                 order by
                 """ + (sortByDistance ? "   d.distance_km, " : " ") + """
@@ -97,6 +100,9 @@ public class DonationPreviewRepository {
         if(citiesIds != null && !citiesIds.isEmpty()) {
             params.put("citiesIds", citiesIds);
         }
+        if(statesIds != null && !statesIds.isEmpty()) {
+            params.put("stateIds", statesIds);
+        }
         if(subcategoriesIds != null && !subcategoriesIds.isEmpty()) {
             params.put("subcategoriesIds", subcategoriesIds);
         }
@@ -115,11 +121,11 @@ public class DonationPreviewRepository {
             return mapResultSetToDonationPreviewDTO(rs);
         });
 
-        PagedDonationPreviewDTO pagedDonationPreviewDTO = new PagedDonationPreviewDTO();
+        PagedResult<DonationPreviewDTO> pagedDonationPreviewDTO = new PagedResult<DonationPreviewDTO>();
         pagedDonationPreviewDTO.setElements(resultList);
         pagedDonationPreviewDTO.setTotalElements(countAtomic.get());
         pagedDonationPreviewDTO.setCurrentPage(page);
-        pagedDonationPreviewDTO.setCitiesIds(citiesIds);
+        pagedDonationPreviewDTO.setPageSize(size);
 
         return pagedDonationPreviewDTO;
     }

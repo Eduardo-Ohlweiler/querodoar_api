@@ -32,4 +32,8 @@ public class LocationService {
     public List<CityMinimal> getCitiesMinimalByStateId(Integer stateId) {
         return cityRepository.findAllCityMinimalByStateId(stateId);
     }
+
+    public Integer getStateIdByCityName(String cityName) {
+        return stateRepository.findStateIdByCityName(cityName);
+    }
 }

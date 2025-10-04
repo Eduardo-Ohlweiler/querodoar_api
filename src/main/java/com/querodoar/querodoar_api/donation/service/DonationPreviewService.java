@@ -2,8 +2,8 @@ package com.querodoar.querodoar_api.donation.service;
 
 import com.querodoar.querodoar_api.location.service.LocationService;
 import com.querodoar.querodoar_api.donation.dto.DonationPreviewDTO;
-import com.querodoar.querodoar_api.donation.dto.PagedDonationPreviewDTO;
 import com.querodoar.querodoar_api.donation.repository.DonationPreviewRepository;
+import com.querodoar.querodoar_api.utils.PagedResult;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class DonationPreviewService {
         return this.repository.findDonationPreviewWhereStatusDOrderByDistanceKmAscDateDesc(cityName, 12);
     }
 
-    public PagedDonationPreviewDTO searchDonationPreview(
+    public PagedResult<DonationPreviewDTO> searchDonationPreview(
             String cityName,
             @Nullable String searchTerm,
             Integer page,
@@ -33,6 +33,7 @@ public class DonationPreviewService {
             @Nullable Boolean onlyPrivate,
             @Nullable Integer distanceKm,
             @Nullable List<Integer> subcategoriesIds,
+            @Nullable List<Integer> statesIds,
             @Nullable List<Integer> citiesIds,
             @Nullable List<Integer> tagsIds){
 
@@ -64,19 +65,7 @@ public class DonationPreviewService {
             distanceKmFilter = distanceKm;
         }
 
-        // Tratamento de locationsIds
-        // Regra de negócio: Se não houver filtro por localidade
-        // exibir doações do mesmo estado da cidade de pesquisa
-        // Caso cityName seja nulo, não foi possível pegar a partir
-        // do IP a cidade do usuário, então não filtrar por localidade
-        List<Integer> newCitiesIds =  citiesIds;
-        if(newCitiesIds == null && cityName != null) {
-            newCitiesIds = new ArrayList<>();
-            List<Integer> citiesOfSameState = locationService.getCitiesIdsOfStateByCityName(cityName);
-            newCitiesIds.addAll(citiesOfSameState);
-        }
-
-        PagedDonationPreviewDTO pagedResult = this.repository.searchDonationPreview(
+        PagedResult<DonationPreviewDTO> pagedResult = this.repository.searchDonationPreview(
                 cityName,
                 searchTerm,
                 page,
@@ -86,7 +75,8 @@ public class DonationPreviewService {
                 isPublic1,
                 isPublic2,
                 distanceKmFilter,
-                newCitiesIds,
+                statesIds,
+                citiesIds,
                 subcategoriesIds,
                 tagsIds
         );
