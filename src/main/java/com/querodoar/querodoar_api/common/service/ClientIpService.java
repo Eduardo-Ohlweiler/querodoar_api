@@ -64,6 +64,9 @@ public class ClientIpService {
             log.debug("Using remote address as client IP: {}", clientIp);
         }
 
+        // Remove a porta se presente (ex: "192.168.1.1:8080" -> "192.168.1.1")
+        clientIp = removePort(clientIp);
+
         log.debug("Resolved client IP: {}", clientIp);
         return clientIp;
     }
@@ -80,6 +83,8 @@ public class ClientIpService {
                 if (ip.contains(",")) {
                     ip = ip.split(",")[0].trim();
                 }
+                // Remove porta se presente
+                ip = removePort(ip);
                 if (isValidIp(ip)) {
                     log.debug("Found valid IP '{}' in header '{}'", ip, header);
                     return ip;
@@ -87,6 +92,36 @@ public class ClientIpService {
             }
         }
         return null;
+    }
+
+    /**
+     * Remove a porta do endereço IP se presente.
+     * Ex: "192.168.1.1:8080" -> "192.168.1.1"
+     * Ex: "[2001:db8::1]:8080" -> "2001:db8::1" (IPv6)
+     */
+    private String removePort(String ipAddress) {
+        if (!StringUtils.hasText(ipAddress)) {
+            return ipAddress;
+        }
+
+        // Para IPv6 entre colchetes: [2001:db8::1]:8080
+        if (ipAddress.startsWith("[")) {
+            int closeBracket = ipAddress.indexOf(']');
+            if (closeBracket > 0) {
+                return ipAddress.substring(1, closeBracket);
+            }
+        }
+
+        // Para IPv4: 192.168.1.1:8080
+        // Verifica se tem ":" e não é IPv6 (IPv6 tem múltiplos ":")
+        int colonCount = ipAddress.length() - ipAddress.replace(":", "").length();
+        if (colonCount == 1) {
+            // É IPv4 com porta
+            return ipAddress.substring(0, ipAddress.indexOf(':'));
+        }
+
+        // Retorna como está (IPv6 sem porta ou IPv4 sem porta)
+        return ipAddress;
     }
 
     /**
